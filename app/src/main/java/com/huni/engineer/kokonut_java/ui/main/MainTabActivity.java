@@ -8,12 +8,14 @@ import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.huni.engineer.kokonut_java.R;
+import com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager;
 
 public class MainTabActivity extends AppCompatActivity {
     private final String TAG = MainTabActivity.class.getSimpleName();
@@ -52,7 +54,7 @@ public class MainTabActivity extends AppCompatActivity {
     /**
      * initialize tab & viewpager layout
      */
-    private ViewPager mViewPager;
+    private SwipeViewPager mViewPager;
     private TabLayout mTab;
     private MainTabViewPagerAdapter mViewPagerAdater;
 
@@ -69,7 +71,7 @@ public class MainTabActivity extends AppCompatActivity {
 
         //ViewPager
         if (mViewPager == null) {
-            mViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
+            mViewPager = (SwipeViewPager) findViewById(R.id.tab_view_pager);
             mViewPager.setOffscreenPageLimit(3);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -173,6 +175,7 @@ public class MainTabActivity extends AppCompatActivity {
             Log.d(TAG, "destroyItem() - position: " + position);
             container.removeView((View) object);
         }
+
 
         @Override
         public boolean isViewFromObject(View view, Object object) {

@@ -19,7 +19,7 @@
         layout="@layout/common_action_bar" />
 
     <!-- View Pager -->
-    <androidx.viewpager.widget.ViewPager
+    <com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager
         android:id="@+id/tab_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
