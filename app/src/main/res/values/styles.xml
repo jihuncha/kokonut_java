@@ -1,0 +1,48 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="common_action_bar_background">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="common_action_bar_left_btn">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:paddingStart">11dp</item>
+        <item name="android:textColor">@color/color_2a2a2a</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="common_action_bar_right_tv">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:paddingEnd">11dp</item>
+        <item name="android:textColor">@color/color_2a2a2a</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="common_action_bar_title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/color_ffffff</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="Activity.Theme.NoActionBar" parent="Theme.AppCompat">
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>

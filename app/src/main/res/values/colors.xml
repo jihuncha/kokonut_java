@@ -7,4 +7,169 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColor">#0b2766</color>
+    <color name="primaryColorDark">@android:color/black</color>
+    <color name="colorAccent">#ea670f</color>
+    <color name="color_000000">#000000</color>
+    <color name="color_47494e">#47494e</color>
+    <color name="color_604f44">#604f44</color>
+    <color name="color_232323">#232323</color>
+    <color name="color_ff3608">#ff3608</color>
+
+    <!-- 투명도 조정 000000 -->
+    <!-- Opacity : 30% -->
+    <!-- Opacity : 60% -->
+    <!-- Opacity : 70% -->
+    <!-- Opacity : 80% -->
+    <!-- Opacity : 63% -->
+    <!-- Opacity : 90% -->
+    <!-- Opacity : 100% -->
+
+    <!-- 투명도 조정 ffffff -->
+    <!-- Opacity : 20% -->
+    <!--<color name="color_80ffffff">#80ffffff</color> &lt;!&ndash; Opacity : 50% &ndash;&gt;-->
+    <!-- Opacity : 60% -->
+    <!-- Opacity : 70% -->
+    <!-- Opacity : 80% -->
+    <!-- Opacity : 63% -->
+    <!-- Opacity : 97% -->
+    <color name="color_00ffffff">#00ffffff</color> <!-- Opacity : 100% -->
+
+    <!-- 투명도 조정 353535 -->
+    <!-- Opacity : 70% -->
+    <!-- Opacity : 15% -->
+    <color name="color_ea670f">#ea670f</color>
+
+    <color name="transparent">#00000000</color>
+
+    <!-- Title bg -->
+
+    <!-- btn_confirm -->
+
+    <!-- btn_cancel -->
+
+    <!-- 이용약관 동의/동의안함 버튼 컬러 -->
+
+    <!-- Sub title -->
+
+    <!-- Intro Bottom BackgroundColor -->
+
+    <color name="color_B6B6B7">#B6B6B7</color>
+    <color name="color_bfbfbf">#bfbfbf</color>
+    <color name="color_bcbcbc">#bcbcbc</color>
+    <color name="color_3760c9">#3760c9</color>
+
+    <!-- 2017.09.15 - 강태구 - 하드키 포커스 -->
+    <!-- 여기까지 -->
+
+    <!-- 채팅 대화방 이미지 갤러리 -->
+
+    <!-- title menu text color-->
+    <color name="color_a5abbd">#a5abbd</color>
+    <color name="color_031d56">#031d56</color>
+    <color name="color_ebebeb">#ebebeb</color>
+    <color name="color_869099">#869099</color>
+    <color name="color_868686">#868686</color>
+    <color name="color_858383">#858383</color>
+    <color name="color_dcdcdc">#dcdcdc</color>
+    <color name="color_b0b0b0">#b0b0b0</color>
+    <color name="color_686666">#686666</color>
+    <color name="color_cc7800">#cc7800</color>
+    <color name="color_cccccc">#cccccc</color>
+
+    <color name="color_0b2766">#0b2766</color>
+    <color name="color_80ffffff">#80ffffff</color>
+    <color name="color_fe6778">#fe6778</color>
+    <color name="color_80ff9600">#80ff9600</color>
+
+
+    <!-- 보안UC -->
+    <color name="color_e7e7e7">#e7e7e7</color>
+    <color name="color_7f7f81">#7f7f81</color>
+    <color name="color_b1b0b2">#b1b0b2</color>
+    <color name="color_485054">#485054</color>
+    <color name="color_00b4ff">#00b4ff</color>
+    <color name="color_868d90">#868d90</color>
+    <color name="color_a9b0b4">#a9b0b4</color>
+    <color name="color_f7f7f7">#f7f7f7</color>
+    <color name="color_eeeeee">#eeeeee</color>
+    <color name="color_4Db2e5fa">#4Db2e5fa</color>
+    <color name="color_ffffff">#ffffff</color>
+    <color name="color_ff9600">#ff9600</color>
+    <color name="color_4Dffffff">#4Dffffff</color>
+
+    <color name="list_item_normal_a">#ffffff</color>
+    <color name="list_item_press_a">#4db2e5fa</color>
+    <color name="color_949494">#949494</color>
+    <color name="color_091f52">#091f52</color>
+    <color name="color_80eeeeee">#80eeeeee</color>
+    <color name="color_80869099">#80869099</color>
+
+    <color name="color_3c5285">#3c5285</color>
+
+    <color name="color_202020">#202020</color>
+    <color name="color_6a6a6a">#6a6a6a</color>
+    <color name="color_6b6b6b">#6b6b6b</color>
+
+    <color name="color_888e9b">#888e9b</color>
+    <color name="color_d4d6df">#d4d6df</color>
+
+    <color name="color_59000000">#59000000</color>
+    <color name="color_cc0b2766">#cc0b2766</color>
+    <color name="color_9a978a">#9a978a</color>
+    <color name="color_555555">#555555</color>
+    <color name="color_727272">#727272</color>
+
+    <color name="color_e5e5e6">#e5e5e6</color>
+    <color name="color_444445">#444445</color>
+
+    <color name="color_9a9a9a">#9a9a9a</color>
+    <color name="color_081b47">#081b47</color>
+
+    <color name="color_1100e8">#1100e8</color>
+    <color name="color_18bd81">#18bd81</color>
+
+    <color name="color_585858">#585858</color>
+    <color name="color_99ffffff">#99ffffff</color>
+
+    <!-- missing -->
+    <color name="color_2f3235">#2f3235</color>
+    <color name="color_24272a">#24272a</color>
+    <color name="color_c2c4c9">#c2c4c9</color>
+    <color name="color_b3000000">#b3000000</color>
+    <color name="color_80000000">#80000000</color>
+    <color name="color_2a2a2a">#2a2a2a</color>
+    <color name="color_53575a">#53575a</color>
+    <color name="color_eae9e9">#eae9e9</color>
+    <color name="color_ff6d5a">#ff6d5a</color>
+
+    <color name="color_505051">#505051</color>
+    <color name="color_fc3b0f">#fc3b0f</color>
+    <color name="color_e68f3f">#e68f3f</color>
+
+    <color name="color_00000000">#00000000</color>
+    <color name="color_ff6341">#ff6341</color>
+    <color name="color_cbc9c9">#cbc9c9</color>
+
+    <!-- 음짤 재생 컬러 -->
+    <color name="color_4a4c5b">#4a4c5b</color> <!-- not exist -->
+    <color name="color_4a8ee2">#4a8ee2</color> <!--     exist -->
+    <color name="color_c7c7c7">#c7c7c7</color> <!--     expired -->
+
+    <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_b9b9bb">#b9b9bb</color>
+    <color name="color_808080">#808080</color>
+    <color name="color_e5763c">#e5763c</color>
+
+
+    <!-- 채팅 대화방 이미지 갤러리 -->
+    <drawable name="color_ff171719">#ff171719</drawable>
+    <drawable name="color_ff3e4449">#ff3e4449</drawable>
+
+    <!-- bg : #171719 -->
+    <drawable name="common_button_a_type_disable_background_color">@color/color_2f3235</drawable>
+    <drawable name="common_button_a_type_press_background_color">#3e4449</drawable>
+    <drawable name="common_button_a_type_normal_background_color">@color/color_2f3235</drawable>
 </resources>

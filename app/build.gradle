@@ -2,29 +2,90 @@ plugins {
     id 'com.android.application'
 }
 
+def getToday() {
+    def date = new Date()
+    def format = date.format("yyMMdd_HH")
+    return format
+}
+
+//APP타입별 버전을 다르게 적용
+//NORMAL(0)
+def nor_version_name = '1.0.0'
+def nor_version_code = 10000
+def nor_min_sdk_version = 21
+//CMake로 NDK빌드시 에러
+//def nor_min_sdk_version = 19
+
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
+        /////////////////////
+        versionCode nor_version_code
+        versionName nor_version_name
+
         applicationId "com.huni.engineer.kokonut_java"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion nor_min_sdk_version
+        targetSdkVersion 29
+        multiDexEnabled false
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    //TODO storepassword...
+    signingConfigs {
+        release {
+//            storeFile file("signature/kokonut.jks")
+//            storePassword "dhzlxhzl"
+//            keyAlias "kokonut_release"
+//            keyPassword "dhzlxhzl"
+        }
+        debug {
+//            storeFile file("signature/kokonut_debug.jks")
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            zipAlignEnabled true
         }
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            zipAlignEnabled true
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+//    applicationVariants.all { variant ->
+//        variant.outputs.all { output ->
+//            def apkName = "kokonut_v" + versionName + "_" + getToday() + "_" + variant.buildType.name + ".apk";
+//            def outputsDir = "/outputs/apk/"
+//            println "*********" + "$project.buildDir" + outputsDir + apkName + "**********";
+//            outputFileName = apkName
+//        }
+//    }
+
+    android {
+        dexOptions {
+            jumboMode = true
+        }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
@@ -36,4 +97,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
