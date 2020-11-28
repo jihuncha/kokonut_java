@@ -54,7 +54,7 @@ public class MainTabActivity extends AppCompatActivity {
     /**
      * initialize tab & viewpager layout
      */
-    private SwipeViewPager mViewPager;
+    private ViewPager mViewPager;
     private TabLayout mTab;
     private MainTabViewPagerAdapter mViewPagerAdater;
 
@@ -71,7 +71,7 @@ public class MainTabActivity extends AppCompatActivity {
 
         //ViewPager
         if (mViewPager == null) {
-            mViewPager = (SwipeViewPager) findViewById(R.id.tab_view_pager);
+            mViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
             mViewPager.setOffscreenPageLimit(3);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -130,9 +130,9 @@ public class MainTabActivity extends AppCompatActivity {
 
     private int getIcon(int tabIndex) {
         switch (tabIndex) {
-            case MAIN_TAB_CAMERA        : return R.drawable.icon_analysis;
-            case MAIN_TAB_SEARCH        : return R.drawable.icon_dropdown;
-            case MAIN_TAB_CALENDAR      : return R.drawable.icon_pen;
+            case MAIN_TAB_CAMERA        : return R.drawable.navi_1;
+            case MAIN_TAB_SEARCH        : return R.drawable.navi_2;
+            case MAIN_TAB_CALENDAR      : return R.drawable.navi_3;
         }
 
         return R.drawable.icon_todo;

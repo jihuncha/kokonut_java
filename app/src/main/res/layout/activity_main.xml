@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,31 +11,21 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-<requestFocus/>
-
-    <!-- title bar -->
-    <include
-        android:id="@+id/tab_main_title_ly"
-        layout="@layout/common_action_bar" />
-
     <!-- View Pager -->
-    <com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/tab_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tabs_layout"
-        android:layout_below="@+id/tab_main_title_ly" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <!-- tab -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/primaryColor"
-        app:tabBackground="@color/color_b0b0b0"
-        app:tabIndicatorColor="@color/transparent"
-        app:tabSelectedTextColor="@color/color_ea670f"
-        app:tabTextColor="@color/color_ffffff" />
+        android:background="@drawable/circular_bottom_sheet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:tabBackground="@color/color_ffffff" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,34 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_parent_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#ebebeb"
-    tools:context=".ui.main.CameraFragment"
-    android:orientation="vertical">
+    android:background="@color/color_ffffff"
+    android:fitsSystemWindows="true">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_weekly_calendar"
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/main_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center_horizontal"
+            app:tabGravity="fill"
+            app:tabIndicatorHeight="1dp"
+            app:tabMode="fixed"
+            android:background="@color/color_fc3b0f"
+            app:tabPaddingStart="-1dp"
+            app:tabPaddingEnd="-1dp"/>
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="86dp"
+            android:background="@color/color_ffffff"
+            app:titleMarginTop="20dp"
+            app:contentInsetStart="25dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-    <TextView
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="가나다아아아아"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="@color/color_9a978a" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <!--tabPaddingStart / End 는 글씨크기 맞추기위해 억지로 적용함..-->
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="camera"
-        android:textSize="20dp"
-        android:textColor="@color/black"
-        android:textAlignment="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
