@@ -72,7 +72,7 @@ public class MainTabActivity extends AppCompatActivity {
         //ViewPager
         if (mViewPager == null) {
             mViewPager = (ViewPager) findViewById(R.id.tab_view_pager);
-            mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setOffscreenPageLimit(2);
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
