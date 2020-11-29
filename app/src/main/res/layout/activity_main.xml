@@ -24,7 +24,7 @@
         android:id="@+id/tabs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/circular_bottom_sheet"
+        android:background="@drawable/circular_top_sheet"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tabBackground="@color/color_ffffff" />
 

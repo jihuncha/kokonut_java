@@ -4,7 +4,7 @@
     android:id="@+id/cl_parent_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_white"
+    android:background="@color/color_f3f3f3"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -20,7 +20,7 @@
             android:layout_height="300dp"
             android:fitsSystemWindows="true"
             android:background="@drawable/circular_bottom_sheet"
-            app:contentScrim="@color/color_141414"
+            app:contentScrim="@color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <androidx.appcompat.widget.Toolbar
@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60.7dp"
                 android:layout_gravity="top"
-                android:background="@drawable/circular_bottom_sheet"
+                android:background="@color/color_ffffff"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
