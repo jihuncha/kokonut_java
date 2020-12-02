@@ -16,6 +16,11 @@ import com.huni.engineer.kokonut_java.R;
 import com.huni.engineer.kokonut_java.ui.utils.AppBarStateChangeListener;
 import com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 
 public class CameraFragment extends BaseTabFragment {
     public final String TAG = CameraFragment.class.getSimpleName();
@@ -87,7 +92,35 @@ public class CameraFragment extends BaseTabFragment {
                 }
             }
         });
+
+        makeCalendarView();
     }
 
 
+    private String calendarMonth;
+    private List<String> calendarDateAll;
+    private List<Integer> calendarDayOfWeek;
+
+    private void makeCalendarView() {
+        Log.d(TAG, "makeCalendarView");
+
+        DecimalFormat df = new DecimalFormat("00");
+        Calendar currentCalendar = Calendar.getInstance();
+
+        calendarMonth = df.format(currentCalendar.get(Calendar.MONTH) + 1);
+
+        calendarDateAll = new ArrayList<>();
+        calendarDateAll.add(df.format(currentCalendar.get(Calendar.DATE)));
+        calendarDayOfWeek = new ArrayList<>();
+        calendarDayOfWeek.add(currentCalendar.get(Calendar.DAY_OF_WEEK));
+
+        for (int i = 1; i < 7; i++) {
+            currentCalendar.add(currentCalendar.DATE , 1);
+            calendarDateAll.add(df.format(currentCalendar.get(Calendar.DATE)));
+            calendarDayOfWeek.add(currentCalendar.get(Calendar.DAY_OF_WEEK));
+        }
+
+        Log.d(TAG, "CalendarMonth - " + calendarMonth + ", CalendarDateAll - " +
+                calendarDateAll.toString() + ", calendarDayOfWeek - " + calendarDayOfWeek.toString());
+    }
 }
