@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java.ui.main;
+package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.content.Context;

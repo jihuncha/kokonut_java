@@ -1,32 +1,26 @@
-package com.huni.engineer.kokonut_java.ui;
+package com.huni.engineer.kokonutjava.ui;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.huni.engineer.kokonut_java.KokonutDefine;
-import com.huni.engineer.kokonut_java.KokonutSettings;
-import com.huni.engineer.kokonut_java.R;
-import com.huni.engineer.kokonut_java.common.PermissionManager;
-import com.huni.engineer.kokonut_java.ui.main.MainTabActivity;
+import com.huni.engineer.kokonutjava.KokonutDefine;
+import com.huni.engineer.kokonutjava.KokonutSettings;
+import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.common.PermissionManager;
+import com.huni.engineer.kokonutjava.ui.main.MainTabActivity;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = SplashActivity.class.getSimpleName();

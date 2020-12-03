@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java.ui.main.camera;
+package com.huni.engineer.kokonutjava.ui.main.camera;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

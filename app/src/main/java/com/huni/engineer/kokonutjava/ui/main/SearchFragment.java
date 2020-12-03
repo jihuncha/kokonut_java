@@ -1,10 +1,10 @@
-package com.huni.engineer.kokonut_java.ui.main;
+package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.huni.engineer.kokonut_java.R;
+import com.huni.engineer.kokonutjava.R;
 
 
 public class SearchFragment extends BaseTabFragment {

@@ -1,12 +1,12 @@
-package com.huni.engineer.kokonut_java.ui.main;
+package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -19,9 +19,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.huni.engineer.kokonut_java.R;
-import com.huni.engineer.kokonut_java.ui.utils.AppBarStateChangeListener;
-import com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager;
+import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.ui.utils.AppBarStateChangeListener;
+import com.huni.engineer.kokonutjava.ui.utils.SwipeViewPager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,9 +29,8 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class CameraFragment extends BaseTabFragment {
+public class CameraFragment extends BaseTabFragment implements View.OnClickListener{
     public final String TAG = CameraFragment.class.getSimpleName();
-
 
     public CameraFragment(Activity activity, LayoutInflater inflater) {
         super(activity, inflater, R.layout.fragment_camera);
@@ -59,6 +58,8 @@ public class CameraFragment extends BaseTabFragment {
     private CollapsingToolbarLayout ctl_container;
     private Toolbar toolbar;
 
+    private LinearLayout ll_toolbar_area;
+
     private TextView tv_camera_title;
     private TextView tv_camera_date_title;
     private NestedScrollView nsv_scroll_view;
@@ -69,7 +70,7 @@ public class CameraFragment extends BaseTabFragment {
 
     private RecyclerView rv_date_selector;
 
-    //∫‰∆‰¿Ã¿˙ æÓ¥≈Õ
+    //Î∑∞ÌéòÏù¥Ï†Ä Ïñ¥ÎåëÌÑ∞
     private ViewPager2 vp_bottom_container;
     private ItemAdapter mAdapter;
 
@@ -81,8 +82,17 @@ public class CameraFragment extends BaseTabFragment {
 
         toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
+        ll_toolbar_area = (LinearLayout) root.findViewById(R.id.ll_toolbar_area);
+        ll_toolbar_area.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "??");
+            }
+        });
+
         tv_camera_title = (TextView) root.findViewById(R.id.tv_camera_title);
         tv_camera_date_title = (TextView) root.findViewById(R.id.tv_camera_date_title);
+        tv_camera_date_title.setOnClickListener(this);
 
         nsv_scroll_view = (NestedScrollView) root.findViewById(R.id.nsv_scroll_view);
 
@@ -90,12 +100,6 @@ public class CameraFragment extends BaseTabFragment {
 
         tv_camera_title_toolbar = (TextView) root.findViewById(R.id.tv_camera_title_toolbar);
         tv_camera_date_toolbar = (TextView) root.findViewById(R.id.tv_camera_date_toolbar);
-        tv_camera_date_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "here?");
-            }
-        });
 
         rv_date_selector = (RecyclerView) root.findViewById(R.id.rv_date_selector);
 
@@ -106,32 +110,37 @@ public class CameraFragment extends BaseTabFragment {
 
                 if (state == State.EXPANDED) {
                     Log.d(TAG, "EXPANDED");
+                    ll_toolbar_area.setVisibility(View.GONE);
                     tv_camera_title_toolbar.setVisibility(View.GONE);
                     tv_camera_date_toolbar.setVisibility(View.GONE);
+
                 } else if (state == State.COLLAPSED){
                     Log.d(TAG, "COLLAPSED");
+                    ll_toolbar_area.setVisibility(View.VISIBLE);
                     tv_camera_title_toolbar.setVisibility(View.VISIBLE);
                     tv_camera_date_toolbar.setVisibility(View.VISIBLE);
+
                 }
             }
         });
 
-        appbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "v - " + v.getId());
-            }
-        });
         vp_bottom_container = (ViewPager2) root.findViewById(R.id.vp_bottom_container);
         vp_bottom_container.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         makeCalendarView();
 
+        tv_camera_date_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "!!!!");
+            }
+        });
+
 //        initPager();
 
     }
 
-    //ø¿¥√ ≥Ø¬• ¿˙¿Â
+    //Ïò§Îäò ÎÇ†Ïßú Ï†ÄÏû•
     private String calendarToday;
     private List<String> calendarDateAll;
 //    private List<Integer> calendarDayOfWeek;
@@ -146,12 +155,6 @@ public class CameraFragment extends BaseTabFragment {
 
         tv_camera_date_toolbar.setText(calendarToday);
         tv_camera_date_title.setText(calendarToday.split(" / ")[0] + " / " + calendarToday.split(" / ")[1] );
-        tv_camera_date_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "dddd",Toast.LENGTH_LONG).show();
-            }
-        });
 
         calendarDateAll = new ArrayList<>();
 
@@ -171,7 +174,7 @@ public class CameraFragment extends BaseTabFragment {
     private void initDateSelector() {
         Log.d(TAG, "initDateSelector");
 
-        //recyclerview º≥¡§
+        //recyclerview ÏÑ§Ï†ï
         LinearLayoutManager horizonalLayoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
 
         rv_date_selector.setLayoutManager(horizonalLayoutManager);
@@ -240,10 +243,20 @@ public class CameraFragment extends BaseTabFragment {
         return temp;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_camera_date_title:
+
+                Log.d(TAG, "??");
+                break;
+        }
+    }
+
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
         private List<String> allData;
         
-        //checkPosition ∞¸∏Æ
+        //checkPosition Í¥ÄÎ¶¨
         private int checkedPosition = 0;
 
         public ItemAdapter(List<String> items) {

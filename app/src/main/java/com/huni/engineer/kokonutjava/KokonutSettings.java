@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java;
+package com.huni.engineer.kokonutjava;
 
 import android.content.Context;
 import android.content.SharedPreferences;

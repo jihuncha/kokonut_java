@@ -1,23 +1,22 @@
-package com.huni.engineer.kokonut_java.ui.main;
+package com.huni.engineer.kokonutjava.ui.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
-import com.huni.engineer.kokonut_java.R;
-import com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager;
+import com.huni.engineer.kokonutjava.R;
 
-public class MainTabActivity extends AppCompatActivity {
+public class MainTabActivity extends AppCompatActivity implements View.OnClickListener{
     private final String TAG = MainTabActivity.class.getSimpleName();
 
     /**
@@ -28,6 +27,7 @@ public class MainTabActivity extends AppCompatActivity {
     public static final int MAIN_TAB_CALENDAR = 2; // 달력 탭
     public static final int TOTAL_TAB_CNT = MAIN_TAB_CALENDAR + 1;
 
+    private Activity mActivity;
     private Context mContext;
     private BaseTabFragment[] mTabFragments = new BaseTabFragment[TOTAL_TAB_CNT];
 
@@ -41,6 +41,7 @@ public class MainTabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mActivity = this;
         mContext = this;
 
         //initialize the tabs...
@@ -136,6 +137,11 @@ public class MainTabActivity extends AppCompatActivity {
         }
 
         return R.drawable.icon_todo;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     /**

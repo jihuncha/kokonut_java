@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java.common;
+package com.huni.engineer.kokonutjava.common;
 
 import android.Manifest;
 import android.accessibilityservice.AccessibilityServiceInfo;
@@ -19,7 +19,7 @@ import android.view.accessibility.AccessibilityManager;
 
 import androidx.core.content.PermissionChecker;
 
-import com.huni.engineer.kokonut_java.KokonutDefine;
+import com.huni.engineer.kokonutjava.KokonutDefine;
 
 import java.util.ArrayList;
 import java.util.List;

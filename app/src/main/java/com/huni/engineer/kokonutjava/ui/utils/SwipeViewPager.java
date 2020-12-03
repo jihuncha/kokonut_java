@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java.ui.utils;
+package com.huni.engineer.kokonutjava.ui.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,7 +6,6 @@ import android.view.MotionEvent;
 
 import androidx.core.view.MotionEventCompat;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 public class SwipeViewPager extends ViewPager {
     private boolean enabled;

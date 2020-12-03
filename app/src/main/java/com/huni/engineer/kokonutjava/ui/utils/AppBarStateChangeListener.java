@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonut_java.ui.utils;
+package com.huni.engineer.kokonutjava.ui.utils;
 
 import com.google.android.material.appbar.AppBarLayout;
 
