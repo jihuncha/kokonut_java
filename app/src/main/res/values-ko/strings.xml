@@ -3,4 +3,12 @@
     <string name="app_name">kokonut_java</string>
 
     <string name="camera_fragment_title">Camera</string>
+
+    <string name="camera_monday">월</string>
+    <string name="camera_tuesday">화</string>
+    <string name="camera_wednesday">수</string>
+    <string name="camera_thursday">목</string>
+    <string name="camera_friday">금</string>
+    <string name="camera_saturday">토</string>
+    <string name="camera_sunday">일</string>
 </resources>

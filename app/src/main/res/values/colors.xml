@@ -19,7 +19,10 @@
 
     <color name="color_141414">#141414</color>
     <color name="color_f3f3f3">#f3f3f3</color>
-
+    <color name="color_b9b9b9">#b9b9b9</color>
+    <color name="color_282828">#282828</color>
+    <color name="color_ffcb3e">#ffcb3e</color>
+    <color name="color_f8f8f8">#f8f8f8</color>
     <!-- 투명도 조정 000000 -->
     <!-- Opacity : 30% -->
     <!-- Opacity : 60% -->

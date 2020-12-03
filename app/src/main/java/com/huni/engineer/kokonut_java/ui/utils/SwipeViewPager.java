@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 
 import androidx.core.view.MotionEventCompat;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class SwipeViewPager extends ViewPager {
     private boolean enabled;
