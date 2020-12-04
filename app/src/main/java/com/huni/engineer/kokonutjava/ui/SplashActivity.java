@@ -152,6 +152,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             public void run() {
                 Intent intent = new Intent();
                 intent.setClass(mContext, MainTabActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
         }, 1000);

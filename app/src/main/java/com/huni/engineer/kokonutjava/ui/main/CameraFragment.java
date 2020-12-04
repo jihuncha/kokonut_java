@@ -247,8 +247,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_camera_date_title:
-
-                Log.d(TAG, "??");
+                Log.d(TAG, "!!!!!!!!!!");
                 break;
         }
     }
