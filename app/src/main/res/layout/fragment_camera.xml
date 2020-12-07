@@ -18,102 +18,128 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/ctl_container"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/circular_bottom_sheet"
-            android:descendantFocusability="blocksDescendants"
-            android:fitsSystemWindows="true"
-            app:contentScrim="@color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+<!--        <com.google.android.material.appbar.CollapsingToolbarLayout-->
+<!--            android:id="@+id/ctl_container"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="300dp"-->
+<!--            android:background="@drawable/circular_bottom_sheet"-->
+<!--            android:descendantFocusability="blocksDescendants"-->
+<!--            android:fitsSystemWindows="true"-->
+<!--            app:contentScrim="@color/transparent"-->
+<!--            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">-->
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="60.7dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:background="@color/color_ffffff"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                <LinearLayout
-                    android:id="@+id/ll_toolbar_area"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/circular_bottom_sheet"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true">
 
                     <TextView
-                        android:id="@+id/tv_camera_title_toolbar"
-                        android:layout_width="0dp"
+                        android:id="@+id/tv_camera_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="26.7dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
+                        android:layout_marginTop="19.7dp"
                         android:text="@string/camera_fragment_title"
                         android:textColor="@color/color_141414"
                         android:textSize="24dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_camera_date_toolbar"
+                        android:id="@+id/tv_camera_date_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="30dp"
-                        android:gravity="center_vertical"
-                        android:text="2020 / 04 / 14"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="42dp"
+                        android:clickable="true"
+                        android:text="2020 / 04"
                         android:textColor="@color/color_141414"
-                        android:textSize="15dp"
-                        android:textStyle="bold" />
+                        android:textSize="17dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_camera_title" />
 
-                </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_date_selector"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="19.3dp"
+                        android:layout_marginRight="19.3dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_camera_date_title" />
+
+
+                    <TextView
+                        android:id="@+id/tv_today_weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_weight_title"
+                        android:textSize="17dp"
+                        android:textColor="@color/color_000000"
+                        app:layout_constraintTop_toBottomOf="@+id/rv_date_selector"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/tv_today_consume"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_000000"
+                        android:textSize="17dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_today_weight"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </androidx.appcompat.widget.Toolbar>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/ll_toolbar_area"
+            android:layout_width="match_parent"
+            android:layout_height="60.7dp"
+            android:background="@drawable/circular_bottom_sheet"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_camera_title_toolbar"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="26.7dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="@string/camera_fragment_title"
+                android:textColor="@color/color_141414"
+                android:textSize="24dp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_camera_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="26.7dp"
-                    android:layout_marginTop="19.7dp"
-                    android:text="@string/camera_fragment_title"
-                    android:textColor="@color/color_141414"
-                    android:textSize="24dp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tv_camera_date_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="30dp"
+                android:gravity="center_vertical"
+                android:text="2020 / 04 / 14"
+                android:textColor="@color/color_141414"
+                android:textSize="15dp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_camera_date_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="42dp"
-                    android:clickable="true"
-                    android:text="2020 / 04"
-                    android:textColor="@color/color_141414"
-                    android:textSize="17dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_camera_title" />
+        </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_date_selector"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="19.3dp"
-                    android:layout_marginRight="19.3dp"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_camera_date_title" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+<!--        </com.google.android.material.appbar.CollapsingToolbarLayout>-->
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -121,12 +147,6 @@
         android:id="@+id/nsv_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <!--        <com.huni.engineer.kokonut_java.ui.utils.SwipeViewPager-->
-        <!--            android:id="@+id/svp_view_pager"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_bottom_container"

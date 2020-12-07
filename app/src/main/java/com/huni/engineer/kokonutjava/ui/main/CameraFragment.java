@@ -72,13 +72,15 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //뷰페이저 어댑터
     private ViewPager2 vp_bottom_container;
-    private ItemAdapter mAdapter;
+    private DateAdapter dateAdapter;
+
+    private ItemAdapter itemAdapter;
 
     private void initView(View root) {
         cl_parent_view = (CoordinatorLayout) root.findViewById(R.id.cl_parent_view);
 
         appbar = (AppBarLayout) root.findViewById(R.id.appbar);
-        ctl_container = (CollapsingToolbarLayout) root.findViewById(R.id.ctl_container);
+//        ctl_container = (CollapsingToolbarLayout) root.findViewById(R.id.ctl_container);
 
         toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
@@ -102,6 +104,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         tv_camera_date_toolbar = (TextView) root.findViewById(R.id.tv_camera_date_toolbar);
 
         rv_date_selector = (RecyclerView) root.findViewById(R.id.rv_date_selector);
+
+        //초기화
+        ll_toolbar_area.setVisibility(View.GONE);
+        tv_camera_title_toolbar.setVisibility(View.GONE);
+        tv_camera_date_toolbar.setVisibility(View.GONE);
 
         appbar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
@@ -137,7 +144,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         });
 
 //        initPager();
-
+        initPager();
     }
 
     //오늘 날짜 저장
@@ -180,30 +187,30 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         rv_date_selector.setLayoutManager(horizonalLayoutManager);
         rv_date_selector.setHasFixedSize(true);
 
-        if (mAdapter == null) {
-            mAdapter = new ItemAdapter(calendarDateAll);
-            rv_date_selector.setAdapter(mAdapter);
+        if (dateAdapter == null) {
+            dateAdapter = new DateAdapter(calendarDateAll);
+            rv_date_selector.setAdapter(dateAdapter);
         } else {
-            mAdapter.setData(calendarDateAll);
-            mAdapter.notifyDataSetChanged();
+            dateAdapter.setData(calendarDateAll);
+            dateAdapter.notifyDataSetChanged();
         }
     }
 
     private void initPager() {
-        if (mAdapter == null) {
-            mAdapter = new ItemAdapter(calendarDateAll);
-            vp_bottom_container.setAdapter(mAdapter);
+        if (itemAdapter == null) {
+            itemAdapter = new ItemAdapter();
+            vp_bottom_container.setAdapter(itemAdapter);
 //            vp_bottom_container.registerOnPageChangeCallback(mPageChange);
         } else {
-            mAdapter.setData(calendarDateAll);
-            mAdapter.notifyDataSetChanged();
-//            if (vp_bottom_container != null) {
-//                vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
+//            itemAdapter.setData(myProfileImageList);
+//            itemAdapter.notifyDataSetChanged();
+//            if (ll_pager != null) {
+//                ll_pager.unregisterOnPageChangeCallback(mPageChange);
 //            }
-//            vp_bottom_container.registerOnPageChangeCallback(mPageChange);
-//            vp_bottom_container.invalidate();
+//            ll_pager.registerOnPageChangeCallback(mPageChange);
+//            ll_pager.invalidate();
 //            if (currentPosition - 1 >= 0) {
-//                vp_bottom_container.setCurrentItem(currentPosition - 1);
+//                ll_pager.setCurrentItem(currentPosition - 1);
 //            }
         }
     }
@@ -252,13 +259,14 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         }
     }
 
-    public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+    //상단 날짜 recyclerview
+    public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ItemViewHolder> {
         private List<String> allData;
         
         //checkPosition 관리
         private int checkedPosition = 0;
 
-        public ItemAdapter(List<String> items) {
+        public DateAdapter(List<String> items) {
             this.allData = items;
         }
 
@@ -299,7 +307,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         Log.d(TAG, "test : " );
                         if (checkedPosition != position) {
                             checkedPosition = position;
-//                            notifyItemChanged(checkedPosition);
                             notifyDataSetChanged();
 
                         }
@@ -326,4 +333,59 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             }
         }
     }
+
+    //하단 viewPager
+    public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+//        private List<JSScsProfileAllList> data;
+
+        public ItemAdapter(){}
+
+//        public ItemAdapter(List<JSScsProfileAllList> items) {
+//            this.data = items;
+//        }
+//
+//        public void setData(List<JSScsProfileAllList> items) {
+//            this.data = items;
+//        }
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_nutrient, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+//            JSScsProfileAllList item = data.get(position);
+//            Log.d(TAG, "onBindViewHolder / item.position - " + position);
+//
+            if (holder instanceof ItemViewHolder) {
+
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+//            return (data != null) ? data.size() : 0;
+            return 3;
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+//            public PhotoView iv_image;
+
+            public ItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+//                iv_image = itemView.findViewById(R.id.iv_image);
+//
+//                Utils.setOnClickListener(iv_image, onHideOrShow);
+            }
+
+            View.OnClickListener onHideOrShow = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            };
+        }
+    }
+
 }
