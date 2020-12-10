@@ -182,7 +182,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         Log.d(TAG, "initDateSelector");
 
         //recyclerview 설정
-        LinearLayoutManager horizonalLayoutManager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
+        LinearLayoutManager horizonalLayoutManager =
+                new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
 
         rv_date_selector.setLayoutManager(horizonalLayoutManager);
         rv_date_selector.setHasFixedSize(true);
@@ -367,7 +368,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         @Override
         public int getItemCount() {
 //            return (data != null) ? data.size() : 0;
-            return 3;
+            return 7;
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
