@@ -41,8 +41,14 @@
         <activity android:name="com.huni.engineer.kokonutjava.ui.main.MainTabActivity"
             android:theme="@style/Activity.Theme.NoActionBar"
             android:screenOrientation="portrait">
-
         </activity>
+
+        <activity android:name=".test.ParallelNestedScrollingActivity"
+            android:theme="@style/Activity.Theme.NoActionBar"
+            android:screenOrientation="portrait">
+        </activity>
+        
+
     </application>
 
 </manifest>

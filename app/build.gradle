@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'kotlin-android'
 
 def getToday() {
     def date = new Date()
@@ -102,4 +103,9 @@ dependencies {
 
     // chart --------------------------------------------------------------------------------------
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

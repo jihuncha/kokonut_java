@@ -1,6 +1,7 @@
 package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.test.ParallelNestedScrollingActivity;
 import com.huni.engineer.kokonutjava.ui.utils.AppBarStateChangeListener;
 import com.huni.engineer.kokonutjava.ui.utils.SwipeViewPager;
 
@@ -136,13 +138,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         makeCalendarView();
 
-        tv_camera_date_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "!!!!");
-            }
-        });
-
 //        initPager();
         initPager();
     }
@@ -256,6 +251,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.tv_camera_date_title:
                 Log.d(TAG, "!!!!!!!!!!");
+
+                Intent intent = new Intent();
+                intent.setClass(mActivity, ParallelNestedScrollingActivity.class);
+                mActivity.startActivity(intent);
                 break;
         }
     }

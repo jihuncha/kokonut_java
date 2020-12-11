@@ -14,4 +14,8 @@
     <string name="today_weight_title">오늘 나의 몸무게는?</string>
     <string name="today_consume_title">오늘의 섭취량</string>
     <string name="tv_no_diet_data_detail">다이어트 정보를 기록하세요!</string>
+
+
+    <string name="page_position">Page %1$d</string>
+    <string name="item_position">Item %1$d</string>
 </resources>
