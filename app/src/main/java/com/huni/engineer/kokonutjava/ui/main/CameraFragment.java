@@ -157,11 +157,15 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         calendarDateAll = new ArrayList<>();
 
-        calendarDateAll.add(df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
+        calendarDateAll.add(
+                df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
+                df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
 
         for (int i = 1; i < 7; i++) {
             currentCalendar.add(currentCalendar.DATE , 1);
-            calendarDateAll.add(df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
+            calendarDateAll.add(
+                    df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
+                    df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
         }
 
         Log.d(TAG, "calendarToday - " + calendarToday + ", CalendarDateAll - " +
@@ -218,6 +222,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 dateAdapter.setPosition(position);
                 dateAdapter.notifyDataSetChanged();
             }
+
+            String date = calendarDateAll.get(position);
+            tv_camera_date_toolbar.setText(date.split("/")[0] + " / " + date.split("/")[1] + " / " +
+                    date.split("/")[2]);
 
             super.onPageSelected(position);
         }
@@ -334,11 +342,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             String textItem = allData.get(position);
 
             if (holder instanceof ItemViewHolder) {
-                holder.tv_day_of_week.setText(textItem.split("/")[1]);
-                holder.tv_day.setText(textItem.split("/")[0]);
+                holder.tv_day_of_week.setText(textItem.split("/")[3]);
+                holder.tv_day.setText(textItem.split("/")[2]);
 
                 if (checkedPosition == position){
-                    Log.d(TAG, "test - : " + textItem.split("/")[1]);
+                    Log.d(TAG, "checkedPosition - : " + textItem);
 
                     holder.cl_parent_view.setBackground(mContext.getResources().getDrawable(R.drawable.circular_calendar_background));
                     holder.tv_day_of_week.setTextColor(mContext.getResources().getColor(R.color.color_ffffff));
@@ -358,6 +366,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                             checkedPosition = position;
                             //viewpager 아이템 위치 변경
                             vp_bottom_container.setCurrentItem(position);
+                            //상단의 text 변경
+                            tv_camera_date_toolbar.setText(textItem.split("/")[0] + " / "
+                                    + textItem.split("/")[1] + " / " + textItem.split("/")[2]);
+
                             notifyDataSetChanged();
                         }
                     }
