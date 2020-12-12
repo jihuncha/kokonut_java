@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -85,23 +86,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         cl_parent_view = (CoordinatorLayout) root.findViewById(R.id.cl_parent_view);
 
         appbar = (AppBarLayout) root.findViewById(R.id.appbar);
-//        ctl_container = (CollapsingToolbarLayout) root.findViewById(R.id.ctl_container);
 
         toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
         ll_toolbar_area = (LinearLayout) root.findViewById(R.id.ll_toolbar_area);
-        ll_toolbar_area.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "??");
-            }
-        });
+        ll_toolbar_area.setOnClickListener(this);
 
         tv_camera_title = (TextView) root.findViewById(R.id.tv_camera_title);
+        tv_camera_title.setOnClickListener(this);
         tv_camera_date_title = (TextView) root.findViewById(R.id.tv_camera_date_title);
         tv_camera_date_title.setOnClickListener(this);
 
-        nsv_scroll_view = (NestedScrollView) root.findViewById(R.id.nsv_scroll_view);
+//        nsv_scroll_view = (NestedScrollView) root.findViewById(R.id.nsv_scroll_view);
 
 //        svp_view_pager = (SwipeViewPager) root.findViewById(R.id.svp_view_pager);
 
@@ -125,13 +121,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                     ll_toolbar_area.setVisibility(View.GONE);
                     tv_camera_title_toolbar.setVisibility(View.GONE);
                     tv_camera_date_toolbar.setVisibility(View.GONE);
-
                 } else if (state == State.COLLAPSED){
                     Log.d(TAG, "COLLAPSED");
                     ll_toolbar_area.setVisibility(View.VISIBLE);
                     tv_camera_title_toolbar.setVisibility(View.VISIBLE);
                     tv_camera_date_toolbar.setVisibility(View.VISIBLE);
-
                 }
             }
         });
@@ -202,11 +196,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             vp_bottom_container.registerOnPageChangeCallback(mPageChange);
         } else {
 //            itemAdapter.setData(myProfileImageList);
-//            itemAdapter.notifyDataSetChanged();
-//            if (ll_pager != null) {
-//                ll_pager.unregisterOnPageChangeCallback(mPageChange);
-//            }
-//            ll_pager.registerOnPageChangeCallback(mPageChange);
+            itemAdapter.notifyDataSetChanged();
+            if (vp_bottom_container != null) {
+                vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
+            }
+            vp_bottom_container.registerOnPageChangeCallback(mPageChange);
 //            ll_pager.invalidate();
 //            if (currentPosition - 1 >= 0) {
 //                ll_pager.setCurrentItem(currentPosition - 1);
@@ -220,7 +214,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         public void onPageSelected(int position) {
             Log.d(TAG, "onPageSelected() - position: " + position);
 
-//            rv_date_selector.setda
             if (dateAdapter != null) {
                 dateAdapter.setPosition(position);
                 dateAdapter.notifyDataSetChanged();
@@ -269,12 +262,43 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_camera_date_title:
-                Log.d(TAG, "!!!!!!!!!!");
+            case R.id.ll_toolbar_area:
+                Log.d(TAG, "onClick - ll_toolbar_area");
+                if (appbar != null) {
+                    appbar.setExpanded(true);
+                }
+                break;
 
-                Intent intent = new Intent();
-                intent.setClass(mActivity, ParallelNestedScrollingActivity.class);
-                mActivity.startActivity(intent);
+            case R.id.tv_camera_title:
+                Log.d(TAG, "onClick - tv_camera_title");
+                if (appbar != null) {
+//                    CoordinatorLayout.LayoutParams params =(CoordinatorLayout.LayoutParams) appbar.getLayoutParams();
+//                    params.height = 3*80; // HEIGHT
+
+//                    appbar.setLayoutParams(params);
+                    appbar.setExpanded(false);
+
+//                    appbar.getlist
+                }
+                break;
+
+//            if (state == AppBarStateChangeListener.State.EXPANDED) {
+//                Log.d(TAG, "EXPANDED");
+//                ll_toolbar_area.setVisibility(View.GONE);
+//                tv_camera_title_toolbar.setVisibility(View.GONE);
+//                tv_camera_date_toolbar.setVisibility(View.GONE);
+//            } else if (state == AppBarStateChangeListener.State.COLLAPSED){
+//                Log.d(TAG, "COLLAPSED");
+//                ll_toolbar_area.setVisibility(View.VISIBLE);
+//                tv_camera_title_toolbar.setVisibility(View.VISIBLE);
+//                tv_camera_date_toolbar.setVisibility(View.VISIBLE);
+//            }
+            case R.id.tv_camera_date_title:
+//                Log.d(TAG, "!!!!!!!!!!");
+//
+//                Intent intent = new Intent();
+//                intent.setClass(mActivity, ParallelNestedScrollingActivity.class);
+//                mActivity.startActivity(intent);
                 break;
         }
     }
@@ -362,17 +386,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //하단 viewPager
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
-//        private List<JSScsProfileAllList> data;
-
         public ItemAdapter(){}
-
-//        public ItemAdapter(List<JSScsProfileAllList> items) {
-//            this.data = items;
-//        }
-//
-//        public void setData(List<JSScsProfileAllList> items) {
-//            this.data = items;
-//        }
 
         @NonNull
         @Override
@@ -381,16 +395,12 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewpager_inside_sample, parent, false);
             vh = new ItemViewHolder(v);
             return vh;
-
-//            return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_nutrient, parent, false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-//            JSScsProfileAllList item = data.get(position);
-//            Log.d(TAG, "onBindViewHolder / item.position - " + position);
-//
             if (holder instanceof ItemViewHolder) {
+                final ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
@@ -407,13 +417,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         @Override
         public int getItemCount() {
-//            return (data != null) ? data.size() : 0;
             return 7;
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
-//            public PhotoView iv_image;
-
             public RecyclerView rv_nutrient_container;
 
             public void setData() {
@@ -423,15 +430,9 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 rv_nutrient_container = itemView.findViewById(R.id.rv_nutrient_container);
-//
-//                Utils.setOnClickListener(iv_image, onHideOrShow);
+
             }
 
-            View.OnClickListener onHideOrShow = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            };
         }
     }
 
