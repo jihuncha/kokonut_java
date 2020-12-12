@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private void createTables(SQLiteDatabase db) {
         //연락처
-//        execSQL(db, TBL_CONTACT.CREATE, "createTables");
+        execSQL(db, TBL_DAILY_FOOD_DATA.CREATE, "createTables");
 
     }
 
@@ -58,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param db
      */
     private void dropTables(SQLiteDatabase db) {
-        //execSQL(db, TBL_CHANNEL.DROP, "dropTables");
+        execSQL(db, TBL_DAILY_FOOD_DATA.DROP, "dropTables");
 
 
     }

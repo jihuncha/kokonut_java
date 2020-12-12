@@ -15,6 +15,10 @@
     <string name="today_consume_title">오늘의 섭취량</string>
     <string name="tv_no_diet_data_detail">다이어트 정보를 기록하세요!</string>
 
+    <string name="tv_set_time_morning">아침</string>
+    <string name="tv_set_time_noon">점심</string>
+    <string name="tv_set_time_evening">저녁</string>
+
 
     <string name="page_position">Page %1$d</string>
     <string name="item_position">Item %1$d</string>

@@ -2,11 +2,14 @@ package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -196,7 +199,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         if (itemAdapter == null) {
             itemAdapter = new ItemAdapter();
             vp_bottom_container.setAdapter(itemAdapter);
-//            vp_bottom_container.registerOnPageChangeCallback(mPageChange);
+            vp_bottom_container.registerOnPageChangeCallback(mPageChange);
         } else {
 //            itemAdapter.setData(myProfileImageList);
 //            itemAdapter.notifyDataSetChanged();
@@ -210,6 +213,23 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 //            }
         }
     }
+
+    //하단 viewpager 이동을 상단에 반영.
+    ViewPager2.OnPageChangeCallback mPageChange = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageSelected(int position) {
+            Log.d(TAG, "onPageSelected() - position: " + position);
+
+//            rv_date_selector.setda
+            if (dateAdapter != null) {
+                dateAdapter.setPosition(position);
+                dateAdapter.notifyDataSetChanged();
+            }
+
+            super.onPageSelected(position);
+        }
+    };
+
 
     private String returnDayOfWeek(int inputDate) {
         Log.d(TAG, "returnDayOfWeek - " + inputDate);
@@ -275,6 +295,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             notifyDataSetChanged();
         }
 
+        public void setPosition(int position) {
+            this.checkedPosition = position;
+        }
+
         @NonNull
         @Override
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -290,11 +314,12 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 holder.tv_day.setText(textItem.split("/")[0]);
 
                 if (checkedPosition == position){
-                    Log.d(TAG, "Test1 - : " + textItem.split("/")[1]);
+                    Log.d(TAG, "test - : " + textItem.split("/")[1]);
 
                     holder.cl_parent_view.setBackground(mContext.getResources().getDrawable(R.drawable.circular_calendar_background));
                     holder.tv_day_of_week.setTextColor(mContext.getResources().getColor(R.color.color_ffffff));
                     holder.tv_day.setTextColor(mContext.getResources().getColor(R.color.color_f8f8f8));
+
                 } else {
                     holder.cl_parent_view.setBackgroundColor(mContext.getResources().getColor(R.color.color_ffffff));
                     holder.tv_day_of_week.setTextColor(mContext.getResources().getColor(R.color.color_b9b9b9));
@@ -307,8 +332,9 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         Log.d(TAG, "test : " );
                         if (checkedPosition != position) {
                             checkedPosition = position;
+                            //viewpager 아이템 위치 변경
+                            vp_bottom_container.setCurrentItem(position);
                             notifyDataSetChanged();
-
                         }
                     }
                 });
@@ -351,7 +377,12 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         @NonNull
         @Override
         public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_nutrient, parent, false));
+            ItemViewHolder vh;
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewpager_inside_sample, parent, false);
+            vh = new ItemViewHolder(v);
+            return vh;
+
+//            return new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_nutrient, parent, false));
         }
 
         @Override
@@ -360,6 +391,16 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 //            Log.d(TAG, "onBindViewHolder / item.position - " + position);
 //
             if (holder instanceof ItemViewHolder) {
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+
+                layoutManager.setInitialPrefetchItemCount(3);
+
+                DetailAdapter test = new DetailAdapter();
+
+                holder.rv_nutrient_container.setLayoutManager(layoutManager);
+                holder.rv_nutrient_container.setAdapter(test);
+
 
             }
         }
@@ -373,9 +414,15 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         class ItemViewHolder extends RecyclerView.ViewHolder {
 //            public PhotoView iv_image;
 
+            public RecyclerView rv_nutrient_container;
+
+            public void setData() {
+
+            }
+
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
-//                iv_image = itemView.findViewById(R.id.iv_image);
+                rv_nutrient_container = itemView.findViewById(R.id.rv_nutrient_container);
 //
 //                Utils.setOnClickListener(iv_image, onHideOrShow);
             }
@@ -385,6 +432,73 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 public void onClick(View view) {
                 }
             };
+        }
+    }
+
+    //내부 recyclerview
+    public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        @NonNull
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new DetailItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_nutrient, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof DetailItemViewHolder) {
+                final DetailItemViewHolder viewHolder = (DetailItemViewHolder) holder;
+
+                switch (position) {
+                    case 0 :
+                        viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_morning));
+                        break;
+                    case 1:
+                        viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_noon));
+                        break;
+                    case 2:
+                        viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_evening));
+                        break;
+                }
+
+
+            }
+        }
+
+        //TODO 아침 점심 저녁..
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+
+        //holder
+        class DetailItemViewHolder extends RecyclerView.ViewHolder {
+            TextView tv_title_calorie;
+            TextView tv_nutrient_item_first_detail;
+            TextView tv_nutrient_item_second_detail;
+            TextView tv_nutrient_item_third_detail;
+
+            RelativeLayout rl_bottom_container;
+            ImageView iv_no_diet_data;
+            TextView tv_no_diet_data;
+            TextView tv_set_time;
+            ImageView iv_plus_button;
+
+            public DetailItemViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                tv_title_calorie = (TextView) itemView.findViewById(R.id.tv_title_calorie);
+                tv_nutrient_item_first_detail = (TextView) itemView.findViewById(R.id.tv_nutrient_item_first_detail);
+                tv_nutrient_item_second_detail = (TextView) itemView.findViewById(R.id.tv_nutrient_item_second_detail);
+                tv_nutrient_item_third_detail = (TextView) itemView.findViewById(R.id.tv_nutrient_item_third_detail);
+
+                rl_bottom_container = (RelativeLayout) itemView.findViewById(R.id.rl_bottom_container);
+                iv_no_diet_data = (ImageView) itemView.findViewById(R.id.iv_no_diet_data);
+                tv_no_diet_data = (TextView) itemView.findViewById(R.id.tv_no_diet_data);
+                tv_set_time = (TextView) itemView.findViewById(R.id.tv_set_time);
+                iv_plus_button = (ImageView) itemView.findViewById(R.id.iv_plus_button);
+            }
+
         }
     }
 

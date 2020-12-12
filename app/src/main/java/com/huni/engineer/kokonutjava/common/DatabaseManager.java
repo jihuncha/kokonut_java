@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.huni.engineer.kokonutjava.database.DatabaseHelper;
+import com.huni.engineer.kokonutjava.database.TBL_DAILY_FOOD_DATA;
 
 public class DatabaseManager {
     public static final String TAG = DatabaseManager.class.getSimpleName();
@@ -13,9 +14,13 @@ public class DatabaseManager {
     private static Context mContext = null;
     private static DatabaseHelper mHelper = null;
 
+    private TBL_DAILY_FOOD_DATA mTblDailyFoodData;
+
     private DatabaseManager(Context context) {
         mHelper = new DatabaseHelper(context);
         mContext = context;
+
+        mTblDailyFoodData = new TBL_DAILY_FOOD_DATA(mHelper.getWritableDatabase());
     }
 
     public static DatabaseManager getInstance(Context context) {
@@ -43,5 +48,10 @@ public class DatabaseManager {
     public void truncate() {
         Log.d(TAG, "truncate()");
 
+        mTblDailyFoodData.truncate();
+    }
+
+    public TBL_DAILY_FOOD_DATA getmTblDailyFoodData() {
+        return mTblDailyFoodData;
     }
 }
