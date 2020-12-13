@@ -34,7 +34,7 @@ public class PermissionManager {
 			//Manifest.permission.ACCESS_COARSE_LOCATION,
 //			Manifest.permission.READ_CONTACTS,
 //			Manifest.permission.READ_PHONE_STATE,
-//			Manifest.permission.RECORD_AUDIO,
+			Manifest.permission.RECORD_AUDIO,
 			/*Manifest.permission.RECEIVE_SMS,*/
 			Manifest.permission.READ_EXTERNAL_STORAGE,
 			Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -42,9 +42,9 @@ public class PermissionManager {
 			//Manifest.permission.CALL_PHONE
 	};
 
-	//짤톡 - 카메라 권한은 따로 부여..
 	public static final String[] CAMERA_PERMISSIONS = {
-			Manifest.permission.CAMERA
+			Manifest.permission.CAMERA,
+			Manifest.permission.RECORD_AUDIO
 	};
 	
 	/*
@@ -139,20 +139,6 @@ public class PermissionManager {
 		activity.requestPermissions(deniedList.toArray(new String[deniedList.size()]), reqCode);
 	}
 
-	@TargetApi(Build.VERSION_CODES.M)
-	public void requestPermissions(Activity activity, String[] permissions, int reqCode) {
-		activity.requestPermissions(permissions, reqCode);
-	}
-
-	public static boolean isPermissionGranted(String[] grantPermissions, int[] grantResults, String permission) {
-		for (int i = 0; i < grantPermissions.length; i++) {
-			if (permission.equals(grantPermissions[i])) {
-				return grantResults[i] == PackageManager.PERMISSION_GRANTED;
-			}
-		}
-
-		return false;
-	}
 
 	@TargetApi(Build.VERSION_CODES.M)
 	public boolean isPermissionGranted(String permission) {
@@ -170,11 +156,6 @@ public class PermissionManager {
 
 		return result;
 	}
-
-//	public void showPermissionPopup() {
-//		PopupManager.getInstance(mContext).showToast("권한이 없습니다.");
-//	}
-
 
 	// 접근성 권한이 있는지 없는지 확인하는 부분
 	// 있으면 true, 없으면 false
@@ -196,103 +177,8 @@ public class PermissionManager {
 		return false;
 	}
 
-	// 접근성 설정화면으로 넘겨주는 부분
-	public void goToAccessibilityPermissions() {
-		try {
-			mContext.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public boolean isRestrictBackground() {
-		Log.d(LOG_TAG, "isRestrictBackground(ENTER)");
-
-		boolean result = false;
-		ConnectivityManager cm = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (VERSION.SDK_INT >= Build.VERSION_CODES.N && cm.isActiveNetworkMetered()) {
-			// Checks user’s Data Saver settings.
-			switch (cm.getRestrictBackgroundStatus()) {
-				case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED:
-					// Background data usage is blocked for this app. Wherever possible,
-					// the app should also use less data in the foreground.
-					Log.d(LOG_TAG, "isRestrictBackground() - RESTRICT_BACKGROUND_STATUS_ENABLED");
-					//PopupManager.getInstance(mContext).showToast("RESTRICT_BACKGROUND_STATUS_ENABLED");
-					result = true;
-					break;
-
-				case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_WHITELISTED:
-					// The app is whitelisted. Wherever possible,
-					// the app should use less data in the foreground and background.
-					Log.d(LOG_TAG, "isRestrictBackground() - RESTRICT_BACKGROUND_STATUS_WHITELISTED");
-					//PopupManager.getInstance(mContext).showToast("RESTRICT_BACKGROUND_STATUS_WHITELISTED");
-					break;
-
-				case ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED:
-					// Data Saver is disabled. Since the device is connected to a
-					// metered network, the app should use less data wherever possible.
-					Log.d(LOG_TAG, "isRestrictBackground() - RESTRICT_BACKGROUND_STATUS_DISABLED");
-					//PopupManager.getInstance(mContext).showToast("RESTRICT_BACKGROUND_STATUS_DISABLED");
-					break;
-			}
-		}
-		Log.d(LOG_TAG, "isRestrictBackground(LEAVE) - result: " + result);
-
-		return result;
-	}
-
-
-	/**
-	 * 다른앱 위에 그리기 권한 체크
-	 * @param context
-	 * @return
-	 */
-	public static boolean isIgnoringOverlayOptimizations(Context context) {
-		Log.d(LOG_TAG, "isIgnoringOverlayOptimizations(ENTER)");
-		boolean result = true;
-		try {
-			if (VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				result = Settings.canDrawOverlays(context);
-				Log.d(LOG_TAG, "isIgnoringOverlayOptimizations() - " + result);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		Log.d(LOG_TAG, "isIgnoringOverlayOptimizations(LEAVE)");
-		return result;
-	}
-
-	/**
-	 * 배터리 최적화 권한 체크
-	 * @param context
-	 * @return
-	 */
-	public static boolean isIgnoringBatteryOptimizations(Context context) {
-		Log.d(LOG_TAG, "isIgnoringBatteryOptimizations(ENTER)");
-		boolean result = true;
-		try {
-			String packageName = context.getPackageName();
-			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			if (VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				Log.d(LOG_TAG, "isIgnoringBatteryOptimizations() - " + pm.isIgnoringBatteryOptimizations(packageName));
-				result = pm.isIgnoringBatteryOptimizations(packageName);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		Log.d(LOG_TAG, "isIgnoringBatteryOptimizations(LEAVE)");
-
-		return result;
-	}
-
-
 	/**
 	 * 앱 상세 설정으로 이동
-	 *  - onActivityResult에서 PTTDefine.REQ_APP_DETAILS_SETTINGS로 체크
-	 *
 	 * @param activity
 	 */
 	public static void goToAppDetailsSettings(Activity activity) {

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_000000"
+    android:orientation="vertical">
+
+    <com.otaliastudios.cameraview.CameraView
+        android:id="@+id/camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true">
+
+        <!-- Watermark! -->
+        <!--
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/watermark"
+            app:layout_drawOnPreview="true|false"
+            app:layout_drawOnPictureSnapshot="true|false"
+            app:layout_drawOnVideoSnapshot="true|false"/>
+        -->
+
+    </com.otaliastudios.cameraview.CameraView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_camera_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/vw_camera_top"
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:background="@color/color_cc000000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/vw_camera_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="@color/color_cc000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <!-- TOP AREA -->
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:src="@drawable/close_active"
+            app:layout_constraintBottom_toBottomOf="@id/vw_camera_top"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_facing"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="5dp"
+            android:padding="10dp"
+            android:src="@drawable/navi_1"
+            app:layout_constraintBottom_toBottomOf="@id/vw_camera_top"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_camera_bg"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginBottom="14dp"
+            android:src="@drawable/bt_camera_bg"
+            app:layout_constraintBottom_toTopOf="@id/vw_camera_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/action_btn_camera"
+            app:layout_constraintBottom_toBottomOf="@id/iv_camera_bg"
+            app:layout_constraintEnd_toEndOf="@id/iv_camera_bg"
+            app:layout_constraintStart_toStartOf="@id/iv_camera_bg"
+            app:layout_constraintTop_toTopOf="@id/iv_camera_bg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

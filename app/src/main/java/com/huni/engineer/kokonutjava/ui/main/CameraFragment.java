@@ -26,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.test.ParallelNestedScrollingActivity;
+import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
 import com.huni.engineer.kokonutjava.ui.utils.AppBarStateChangeListener;
 import com.huni.engineer.kokonutjava.ui.utils.SwipeViewPager;
 
@@ -473,6 +474,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_evening));
                         break;
                 }
+
+                viewHolder.iv_plus_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "iv_plus_button/onClick");
+
+                        Intent intent = new Intent();
+                        intent.setClass(mActivity, CameraCaptureActivity.class);
+                        mActivity.startActivityForResult(intent, 1234);
+
+                    }
+                });
 
 
             }
