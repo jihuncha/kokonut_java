@@ -1,4 +1,4 @@
-package com.huni.engineer.kokonutjava.ui.utils;
+package com.huni.engineer.kokonutjava.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;

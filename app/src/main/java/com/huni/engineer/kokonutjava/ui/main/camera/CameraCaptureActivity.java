@@ -1,18 +1,21 @@
 package com.huni.engineer.kokonutjava.ui.main.camera;
 
+import android.content.Context;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.huni.engineer.kokonutjava.R;
-import com.huni.engineer.kokonutjava.ui.utils.CameraSettings;
+import com.huni.engineer.kokonutjava.common.FileManager;
+import com.huni.engineer.kokonutjava.utils.DateUtils;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraView;
-import com.otaliastudios.cameraview.FileCallback;
 import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.VideoResult;
 import com.otaliastudios.cameraview.controls.Mode;
@@ -23,29 +26,47 @@ import com.otaliastudios.cameraview.gesture.GestureAction;
 import com.otaliastudios.cameraview.markers.DefaultAutoFocusMarker;
 import com.otaliastudios.cameraview.size.Size;
 import com.otaliastudios.cameraview.size.SizeSelector;
+import com.huni.engineer.kokonutjava.utils.CameraSettings;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
-public class CameraCaptureActivity extends AppCompatActivity {
+public class CameraCaptureActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = CameraCaptureActivity.class.getSimpleName();
 
     private CameraView mCameraView;
+    private ImageView iv_camera;
 
+    private Context mContext;
+    private Handler mHandler;
+
+    //camera step 관리
+    public static final int STEP_NONE    = 0;
+    public static final int STEP_IDLE    = 1;
+    public static final int STEP_TAKING  = 2;
+    public static final int STEP_PREVIEW = 3;
+
+    private int mStep = STEP_NONE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_capture);
 
+        mContext = this;
+        mHandler = new Handler();
+
         initComponent();
     }
 
     private void initComponent() {
+
+        iv_camera = findViewById(R.id.iv_camera);
+        iv_camera.setOnClickListener(this);
+
         mCameraView = findViewById(R.id.camera_view);
         mCameraView.setLifecycleOwner(this);
         mCameraView.setPictureSize(mSizeSelector);
@@ -65,7 +86,9 @@ public class CameraCaptureActivity extends AppCompatActivity {
         mCameraView.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(@NonNull PictureResult result) {
-                Log.d(TAG, "onPictureTaken() - result.size: " + result.getSize() + ", width: " + result.getSize().getWidth() + ", height: " + result.getSize().getHeight());
+                Log.d(TAG, "onPictureTaken() - result.size: " +
+                        result.getSize() + ", width: " + result.getSize().getWidth() +
+                        ", height: " + result.getSize().getHeight());
 //                PopupManager.getInstance(mContext).showToast("size: " + result.getSize());
 
 //                showLoading(true, "onPictureTaken");
@@ -191,4 +214,116 @@ public class CameraCaptureActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_camera:
+                Log.d(TAG, "onClick - iv_camera");
+
+                makePic();
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        if (isPreview()) {
+//            updateStep(STEP_IDLE, "onBackPressed(isPreview)");
+//            return;
+//        }
+//        if (isTaking()) {
+//            updateStep(STEP_IDLE, "onBackPressed(isTaking)");
+//            return;
+//        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCameraView.open();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if (isTaking()) {
+//            updateStep(STEP_PREVIEW, "onPause(isTaking)");
+//            return;
+//        }
+        mCameraView.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mCameraView.clearCameraListeners();
+        mCameraView.clearFrameProcessors();
+        mCameraView.close();
+        mCameraView.destroy();
+    }
+
+    private void makePic() {
+        Log.d(TAG, "makePic()/status - " + mCameraView.isTakingPicture());
+        if (mCameraView.isTakingPicture()) {
+            Log.e(TAG, "makePic() - already taking picture!!");
+            return;
+        }
+
+        updateStep(STEP_TAKING, "makePic");
+        makeCapturePath("jpg");
+        mCameraView.setMode(Mode.PICTURE);
+        mCameraView.setPictureFormat(PictureFormat.JPEG);
+        mCameraView.takePicture();
+    }
+
+    private void updateStep(final int step, String f) {
+        Log.d(TAG, "updateStep() - f: " + f + ", step: " + mStep + " --> " + step);
+        if (mStep != step) {
+            mStep = step;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    procStep();
+                }
+            });
+        }
+    }
+
+    private String mCapturePath;
+    private String mCaptureName;
+
+    private String makeCapturePath(String ext) {
+        mCaptureName = "KOKONUTCAM_" + DateUtils.toFormatString() + "." + ext;
+        mCapturePath = FileManager.getImageDir(mContext, true) + mCaptureName;
+
+        Log.d(TAG, "makeCapturePath() - name: " + mCaptureName + ", path: " + mCapturePath);
+
+        return mCapturePath;
+    }
+
+    private void procStep() {
+        switch (mStep) {
+            case STEP_IDLE:
+                if (!mCameraView.isOpened()) {
+                    mCameraView.open();
+                }
+                break;
+
+            case STEP_TAKING:
+                break;
+
+            case STEP_PREVIEW:
+                if (mCameraView.isTakingVideo()) {
+                    mCameraView.stopVideo();
+                }
+                if (mCameraView.isOpened()) {
+                    mCameraView.close();
+                }
+//                CameraPreviewActivity.startCameraPreview(this, mRequestMode, mCapturePath, PTTDefine.REQCD_SHOW_PREVIEW);
+                break;
+        }
+    }
 }

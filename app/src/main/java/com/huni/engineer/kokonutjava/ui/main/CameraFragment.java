@@ -2,10 +2,8 @@ package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,10 +23,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.R;
-import com.huni.engineer.kokonutjava.test.ParallelNestedScrollingActivity;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
-import com.huni.engineer.kokonutjava.ui.utils.AppBarStateChangeListener;
-import com.huni.engineer.kokonutjava.ui.utils.SwipeViewPager;
+import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -70,7 +66,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     private TextView tv_camera_title;
     private TextView tv_camera_date_title;
     private NestedScrollView nsv_scroll_view;
-    private SwipeViewPager svp_view_pager;
 
     private TextView tv_camera_title_toolbar;
     private TextView tv_camera_date_toolbar;
