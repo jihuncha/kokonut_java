@@ -29,55 +29,17 @@
     <color name="color_d4d4d4">#d4d4d4</color>
     <color name="color_66141414">#66141414</color>
 
-    <!-- 투명도 조정 000000 -->
-    <!-- Opacity : 30% -->
-    <!-- Opacity : 60% -->
-    <!-- Opacity : 70% -->
-    <!-- Opacity : 80% -->
-    <!-- Opacity : 63% -->
-    <!-- Opacity : 90% -->
-    <!-- Opacity : 100% -->
-
-    <!-- 투명도 조정 ffffff -->
-    <!-- Opacity : 20% -->
-    <!--<color name="color_80ffffff">#80ffffff</color> &lt;!&ndash; Opacity : 50% &ndash;&gt;-->
-    <!-- Opacity : 60% -->
-    <!-- Opacity : 70% -->
-    <!-- Opacity : 80% -->
-    <!-- Opacity : 63% -->
-    <!-- Opacity : 97% -->
     <color name="color_00ffffff">#00ffffff</color> <!-- Opacity : 100% -->
 
-    <!-- 투명도 조정 353535 -->
-    <!-- Opacity : 70% -->
-    <!-- Opacity : 15% -->
     <color name="color_ea670f">#ea670f</color>
 
     <color name="transparent">#00000000</color>
-
-    <!-- Title bg -->
-
-    <!-- btn_confirm -->
-
-    <!-- btn_cancel -->
-
-    <!-- 이용약관 동의/동의안함 버튼 컬러 -->
-
-    <!-- Sub title -->
-
-    <!-- Intro Bottom BackgroundColor -->
 
     <color name="color_B6B6B7">#B6B6B7</color>
     <color name="color_bfbfbf">#bfbfbf</color>
     <color name="color_bcbcbc">#bcbcbc</color>
     <color name="color_3760c9">#3760c9</color>
 
-    <!-- 2017.09.15 - 강태구 - 하드키 포커스 -->
-    <!-- 여기까지 -->
-
-    <!-- 채팅 대화방 이미지 갤러리 -->
-
-    <!-- title menu text color-->
     <color name="color_a5abbd">#a5abbd</color>
     <color name="color_031d56">#031d56</color>
     <color name="color_ebebeb">#ebebeb</color>
@@ -95,8 +57,6 @@
     <color name="color_fe6778">#fe6778</color>
     <color name="color_80ff9600">#80ff9600</color>
 
-
-    <!-- 보안UC -->
     <color name="color_e7e7e7">#e7e7e7</color>
     <color name="color_7f7f81">#7f7f81</color>
     <color name="color_b1b0b2">#b1b0b2</color>
@@ -164,19 +124,17 @@
     <color name="color_ff6341">#ff6341</color>
     <color name="color_cbc9c9">#cbc9c9</color>
 
-    <!-- 음짤 재생 컬러 -->
-    <color name="color_4a4c5b">#4a4c5b</color> <!-- not exist -->
-    <color name="color_4a8ee2">#4a8ee2</color> <!--     exist -->
-    <color name="color_c7c7c7">#c7c7c7</color> <!--     expired -->
+    <color name="color_4a4c5b">#4a4c5b</color>
+    <color name="color_4a8ee2">#4a8ee2</color>
+    <color name="color_c7c7c7">#c7c7c7</color>
 
     <color name="color_999999">#999999</color>
     <color name="color_666666">#666666</color>
     <color name="color_b9b9bb">#b9b9bb</color>
     <color name="color_808080">#808080</color>
     <color name="color_e5763c">#e5763c</color>
+    <color name="color_e9e9e9">#e9e9e9</color>
 
-
-    <!-- 채팅 대화방 이미지 갤러리 -->
     <drawable name="color_ff171719">#ff171719</drawable>
     <drawable name="color_ff3e4449">#ff3e4449</drawable>
 

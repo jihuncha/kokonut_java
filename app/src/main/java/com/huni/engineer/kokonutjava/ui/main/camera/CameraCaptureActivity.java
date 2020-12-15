@@ -35,7 +35,9 @@ import java.util.List;
 
 
 public class CameraCaptureActivity extends AppCompatActivity implements View.OnClickListener {
-    private final String TAG = CameraCaptureActivity.class.getSimpleName();
+    public static final String TAG = CameraCaptureActivity.class.getSimpleName();
+
+    public static final String EXTRA_PATH = TAG + ".path";
 
     private CameraView mCameraView;
     private ImageView iv_camera;

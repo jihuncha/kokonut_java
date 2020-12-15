@@ -23,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.common.PermissionHandler;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
 import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 
@@ -77,6 +78,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     private DateAdapter dateAdapter;
 
     private ItemAdapter itemAdapter;
+
+    private PermissionHandler mCameraPermission;
 
     private void initView(View root) {
         cl_parent_view = (CoordinatorLayout) root.findViewById(R.id.cl_parent_view);
@@ -475,9 +478,12 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                     public void onClick(View view) {
                         Log.d(TAG, "iv_plus_button/onClick");
 
-                        Intent intent = new Intent();
-                        intent.setClass(mActivity, CameraCaptureActivity.class);
-                        mActivity.startActivityForResult(intent, 1234);
+//                        if (mCameraPermission.checkPermissions(true, "initiatePopupWindow/tv_profile_take_pic")) {
+//                            Intent intent = new Intent();
+//                            intent.setClass(mActivity, CameraCaptureActivity.class);
+//                            mActivity.startActivityForResult(intent, 1234);
+//                        }
+
 
                     }
                 });

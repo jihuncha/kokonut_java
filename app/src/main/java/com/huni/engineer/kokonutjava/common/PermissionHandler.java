@@ -1,23 +1,22 @@
-//package com.huni.engineer.kokonut_java.common;
-//
-//import android.Manifest;
-//import android.app.Activity;
-//import android.content.Intent;
-//import android.net.Uri;
-//import android.os.Build;
-//import android.provider.Settings;
-//import android.util.Log;
-//
-//import androidx.core.content.PermissionChecker;
-//
-//
-//import com.huni.engineer.kokonut_java.R;
-//
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//
-//public class PermissionHandler {
+package com.huni.engineer.kokonutjava.common;
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.util.Log;
+
+import androidx.core.content.PermissionChecker;
+
+import com.huni.engineer.kokonutjava.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class PermissionHandler {
 //    public static final String TAG = PermissionHandler.class.getSimpleName();
 //
 //    public static final int REQ_APP_PERM_AGREE_CAMERA     = 1103;
@@ -206,4 +205,4 @@
 //
 //        return new String[] { };
 //    }
-//}
+}
