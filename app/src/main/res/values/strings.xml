@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">kokonut_java</string>
+    <string name="app_name">KOKONUT</string>
+
+    <string name="login_id">android_test</string>
+    <string name="login_pass">android_test</string>
 
     <string name="camera_fragment_title">Camera</string>
 

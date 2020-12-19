@@ -68,6 +68,12 @@ public class KokonutSettings {
     public boolean getAlreadyStarted() 						 { return mSharedPrefs.getBoolean("alreadyStarted", false); }
     public boolean setAlreadyStarted(boolean alreadyStarted) { return                    save("alreadyStarted", alreadyStarted); }
 
+    public String setSessionKey(String sessionKey) {
+        return save("sessionKey", sessionKey);
+    }
+
+    public String getSessionKey()                       {return  mSharedPrefs.getString("sessionKey", "");}
+
 //    public int getMondaySellAvg() {
 //        return mSharedPrefs.getInt("mondaySellAvg", 0);
 //    }

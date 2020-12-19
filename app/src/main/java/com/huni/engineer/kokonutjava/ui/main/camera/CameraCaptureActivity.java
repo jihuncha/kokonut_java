@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.huni.engineer.kokonutjava.R;
@@ -16,8 +17,10 @@ import com.huni.engineer.kokonutjava.common.FileManager;
 import com.huni.engineer.kokonutjava.utils.DateUtils;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraView;
+import com.otaliastudios.cameraview.FileCallback;
 import com.otaliastudios.cameraview.PictureResult;
 import com.otaliastudios.cameraview.VideoResult;
+import com.otaliastudios.cameraview.controls.Facing;
 import com.otaliastudios.cameraview.controls.Mode;
 import com.otaliastudios.cameraview.controls.PictureFormat;
 import com.otaliastudios.cameraview.controls.Preview;
@@ -28,6 +31,7 @@ import com.otaliastudios.cameraview.size.Size;
 import com.otaliastudios.cameraview.size.SizeSelector;
 import com.huni.engineer.kokonutjava.utils.CameraSettings;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +48,9 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
 
     private Context mContext;
     private Handler mHandler;
+
+    private ImageView iv_facing;
+    private ImageView iv_close;
 
     //camera step 관리
     public static final int STEP_NONE    = 0;
@@ -68,6 +75,11 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
 
         iv_camera = findViewById(R.id.iv_camera);
         iv_camera.setOnClickListener(this);
+
+        iv_facing = (ImageView) findViewById(R.id.iv_facing);
+        iv_facing.setOnClickListener(this);
+        iv_close = (ImageView) findViewById(R.id.iv_close);
+        iv_close.setOnClickListener(this);
 
         mCameraView = findViewById(R.id.camera_view);
         mCameraView.setLifecycleOwner(this);
@@ -94,15 +106,15 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
 //                PopupManager.getInstance(mContext).showToast("size: " + result.getSize());
 
 //                showLoading(true, "onPictureTaken");
-//                result.toFile(new File(mCapturePath), new FileCallback() {
-//                    @Override
-//                    public void onFileReady(@Nullable File file) {
-////                        hideLoading("onPictureTaken.onFileReady");
-////                        updateStep(STEP_PREVIEW, "onPictureTaken");
-//
-//                        //ImageCropActivity.startCrop(CameraActivity.this, mCapturePath, 1);
-//                    }
-//                });
+                result.toFile(new File(mCapturePath), new FileCallback() {
+                    @Override
+                    public void onFileReady(@Nullable File file) {
+//                        hideLoading("onPictureTaken.onFileReady");
+                        updateStep(STEP_PREVIEW, "onPictureTaken");
+
+                        //ImageCropActivity.startCrop(CameraActivity.this, mCapturePath, 1);
+                    }
+                });
             }
 
             @Override
@@ -224,6 +236,19 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
 
                 makePic();
                 break;
+
+            case R.id.iv_close:
+                finish();
+                break;
+
+            case R.id.iv_facing:
+                if (mCameraView.getFacing() == Facing.FRONT){
+                    mCameraView.setFacing(Facing.BACK);
+                } else {
+                    mCameraView.setFacing(Facing.FRONT);
+                }
+                break;
+
         }
     }
 
@@ -324,7 +349,7 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
                 if (mCameraView.isOpened()) {
                     mCameraView.close();
                 }
-//                CameraPreviewActivity.startCameraPreview(this, mRequestMode, mCapturePath, PTTDefine.REQCD_SHOW_PREVIEW);
+                CameraPreviewActivity.startCameraPreview(this, mCapturePath, 1234);
                 break;
         }
     }

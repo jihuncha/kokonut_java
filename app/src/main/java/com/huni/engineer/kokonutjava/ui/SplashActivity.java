@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -16,11 +18,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import com.huni.engineer.kokonutjava.KokonutDefine;
 import com.huni.engineer.kokonutjava.KokonutSettings;
 import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.common.PermissionManager;
+import com.huni.engineer.kokonutjava.proto.JSLoginInfo;
+import com.huni.engineer.kokonutjava.proto.JSUtil;
+import com.huni.engineer.kokonutjava.proto.response.JSresponseLoginInfo;
+import com.huni.engineer.kokonutjava.proto.retrofit.NetworkHelper;
 import com.huni.engineer.kokonutjava.ui.main.MainTabActivity;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = SplashActivity.class.getSimpleName();
@@ -61,7 +73,112 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        startKokonutApp();
+        requestLoginInfo();
+
+//        startKokonutApp();
+    }
+
+    public void requestLoginInfo() {
+        JSLoginInfo test23 = new JSLoginInfo();
+        test23.setLoginId( mContext.getResources().getString(R.string.login_id));
+        test23.setLoginPassword(mContext.getResources().getString(R.string.login_pass));
+
+//        Call<ResponseBody> test2 = NetworkHelper.getInstance(mContext).getApiService().login(test23);
+//        test2.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                Log.d(TAG, "test : " + response.body().toString());
+//
+////                Log.d(TAG, "ddd : " + JSUtil.json2String(response.body()));
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//            }
+//        });
+
+        Call<JSresponseLoginInfo> test = NetworkHelper.getInstance(mContext).getApiService().login(test23);
+        test.enqueue(new Callback<JSresponseLoginInfo>() {
+            @Override
+            public void onResponse(Call<JSresponseLoginInfo> call, Response<JSresponseLoginInfo> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse - success!!");
+                    JSresponseLoginInfo result = response.body();
+
+                    KokonutSettings.getInstance(mContext).setSessionKey(result.getSessionKey());
+                } else {
+                    Log.e(TAG, "onResponse - error!");
+
+                    Toast.makeText(mContext,"Login Info Not Correct!!", Toast.LENGTH_SHORT).show();
+                }
+
+                startKokonutApp();
+            }
+
+            @Override
+            public void onFailure(Call<JSresponseLoginInfo> call, Throwable t) {
+                Log.e(TAG, "onFailure - " + t.toString());
+
+                Toast.makeText(mContext,"Login Info Not Correct!!", Toast.LENGTH_SHORT).show();
+
+                startKokonutApp();
+            }
+        });
+
+//        test.enqueue(new Callback<JSresponseLoginInfo>() {
+//            @Override
+//            public void onResponse(Call<JSresponseLoginInfo> call, Response<JSresponseLoginInfo> response) {
+//                Log.d(TAG, "testset ? : " + response.toString());
+////                Log.d(TAG, "tge : " + JSUtil.json2Object(response.body(), ))
+//                if(response.isSuccessful()) {
+//                    Log.d(TAG, "re : " +response.code());
+//                    Log.d(TAG, "good : " + response.body());
+//                    Log.d(TAG, "me : " + response.message());
+//                    JSresponseLoginInfo result = response.body();
+//                    Log.d(TAG, "result = " + result.toString());
+//                    Log.d(TAG, " fdsf : " + result.getSessionKey());
+//
+//                }
+//
+//                startKokonutApp();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSresponseLoginInfo> call, Throwable t) {
+//                Log.e(TAG, "onFailure - " + t.getMessage());
+//
+//                Toast.makeText(mContext,"Login Info Not Correct!!", Toast.LENGTH_SHORT).show();
+//
+//                startKokonutApp();
+//            }
+//        });
+//        test.enqueue(new Callback<JSLoginInfo>() {
+//            @Override
+//            public void onResponse(Call<JSLoginInfo> call, Response<JSLoginInfo> response) {
+//                if(response.isSuccessful()) {
+//                    Log.d(TAG, "good : " + response.body().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSLoginInfo> call, Throwable t) {
+//
+//            }
+//        });
+//        Callback<JSresponseLoginInfo> test2 = new Callback<JSresponseLoginInfo>() {
+//            @Override
+//            public void onResponse(Call<JSresponseLoginInfo> call, Response<JSresponseLoginInfo> response) {
+//                Log.d(TAG, "test234 : " + response.body().toString());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSresponseLoginInfo> call, Throwable t) {
+//
+//            }
+//        }
+//
+//        test.enqueue(test2);
     }
 
     @TargetApi(Build.VERSION_CODES.M)

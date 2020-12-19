@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.huni.engineer.kokonutjava.KokonutSettings;
 import com.huni.engineer.kokonutjava.R;
 
 public class MainTabActivity extends AppCompatActivity implements View.OnClickListener{
@@ -43,6 +44,8 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
 
         mActivity = this;
         mContext = this;
+
+        Log.d(TAG, "test : " + KokonutSettings.getInstance(mContext).getSessionKey());
 
         //initialize the tabs...
         mTabFragments[MAIN_TAB_CAMERA] = new CameraFragment(this, getLayoutInflater());

@@ -477,14 +477,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                     @Override
                     public void onClick(View view) {
                         Log.d(TAG, "iv_plus_button/onClick");
-
 //                        if (mCameraPermission.checkPermissions(true, "initiatePopupWindow/tv_profile_take_pic")) {
-//                            Intent intent = new Intent();
-//                            intent.setClass(mActivity, CameraCaptureActivity.class);
-//                            mActivity.startActivityForResult(intent, 1234);
+                            Intent intent = new Intent();
+                            intent.setClass(mActivity, CameraCaptureActivity.class);
+                            mActivity.startActivityForResult(intent, 1234);
 //                        }
-
-
                     }
                 });
 
