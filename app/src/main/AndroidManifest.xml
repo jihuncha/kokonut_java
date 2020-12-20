@@ -66,6 +66,10 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".ui.popup.LoadingActivity"
+            android:theme="@android:style/Theme.Translucent" />
+
     </application>
 
 </manifest>

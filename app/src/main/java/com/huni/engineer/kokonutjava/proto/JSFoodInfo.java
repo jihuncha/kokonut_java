@@ -3,34 +3,53 @@ package com.huni.engineer.kokonutjava.proto;
 import com.google.gson.annotations.SerializedName;
 
 public class JSFoodInfo {
-    @SerializedName("keep-alive-timeout")  private Integer keepAliveTimeout; //분단위
-    @SerializedName("cauth-key-expire")    private Integer cAuthKeyExpire; //분단위
+//    @SerializedName("userId")                   private String userId;
+//    @SerializedName("Authentication")           private String sessionKey;
+    @SerializedName("image")                    private String image;
+
+
     public JSFoodInfo() { ; }
 
-    public Integer getKeepAliveTimeout() {
-        return keepAliveTimeout != null ? keepAliveTimeout : 0;
+//    public String getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(String userId) {
+//        this.userId = userId;
+//    }
+//
+//    public String getSessionKey() {
+//        return sessionKey;
+//    }
+//
+//    public void setSessionKey(String sessionKey) {
+//        this.sessionKey = sessionKey;
+//    }
+
+    public String getImage() {
+        return image;
     }
 
-    public void setKeepAliveTimeout(Integer keepAliveTimeout) {
-        this.keepAliveTimeout = keepAliveTimeout;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public Integer getCAuthKeyExpire() {
-        return cAuthKeyExpire != null ? cAuthKeyExpire : 0;
-    }
+//    @Override
+//    public String toString() {
+//        return "JSFoodInfo{" +
+//                "userId='" + userId + '\'' +
+//                ", sessionKey='" + sessionKey + '\'' +
+//                ", image='" + image + '\'' +
+//                '}';
+//    }
 
-    public void setCAuthKeyExpire(Integer cAuthKeyExpire) {
-        this.cAuthKeyExpire = cAuthKeyExpire;
-    }
 
     @Override
     public String toString() {
-        return "JSAppConfig{" +
-                "keepAliveTimeout=" + keepAliveTimeout +
-                ", cAuthKeyExpire=" + cAuthKeyExpire +
+        return "JSFoodInfo{" +
+                "image='" + image + '\'' +
                 '}';
     }
-
 }
 
 

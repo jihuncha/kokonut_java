@@ -25,4 +25,6 @@
 
     <string name="page_position">Page %1$d</string>
     <string name="item_position">Item %1$d</string>
+
+    <string name="camera_result_consume_all_title">전체 섭취량</string>
 </resources>

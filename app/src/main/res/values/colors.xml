@@ -138,6 +138,8 @@
     <drawable name="color_ff171719">#ff171719</drawable>
     <drawable name="color_ff3e4449">#ff3e4449</drawable>
 
+    <color name="color_d6d6d6">#d6d6d6</color>
+
     <!-- bg : #171719 -->
     <drawable name="common_button_a_type_disable_background_color">@color/color_2f3235</drawable>
     <drawable name="common_button_a_type_press_background_color">#3e4449</drawable>
