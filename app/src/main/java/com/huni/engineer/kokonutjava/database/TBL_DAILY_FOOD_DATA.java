@@ -117,10 +117,10 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
             do {
                 DailyFoodInfo contact = new DailyFoodInfo();
                 if (idx.FOOD_NAME != -1) contact.setFoodName(c.getString(idx.FOOD_NAME));
-                if (idx.CALORIES != -1) contact.setCalories(c.getInt(idx.CALORIES));
-                if (idx.CARBOHYDRATE != -1) contact.setCarbohydrate(c.getInt(idx.CARBOHYDRATE));
-                if (idx.PROTEIN != -1) contact.setProtein(c.getInt(idx.PROTEIN));
-                if (idx.FAT != -1) contact.setFat(c.getInt(idx.FAT));
+                if (idx.CALORIES != -1) contact.setCalories(c.getFloat(idx.CALORIES));
+                if (idx.CARBOHYDRATE != -1) contact.setCarbohydrate(c.getFloat(idx.CARBOHYDRATE));
+                if (idx.PROTEIN != -1) contact.setProtein(c.getFloat(idx.PROTEIN));
+                if (idx.FAT != -1) contact.setFat(c.getFloat(idx.FAT));
                 if (idx.IMAGE_KEY != -1) contact.setImageKey(c.getString(idx.IMAGE_KEY));
                 if (idx.DATE != -1) contact.setDate(c.getString(idx.DATE));
                 if (idx.CONSUME_TIME != -1) contact.setConsumeTime(c.getInt(idx.CONSUME_TIME));
@@ -184,33 +184,32 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
 //        return -1;
 //    }
 
-//    public int updateForSync(List<DailyFoodInfo> modList) {
-//        try {
-//            int count = -1;
-//            db.beginTransaction();
-//            for (DailyFoodInfo contact : modList) {
-//                if (update(contact, E164_HASH + "=?", new String[] { contact.getE164Hash() })) {
-//                    count++;
-//                }
-//                else if (insert(contact) > 0) {
-//                    count++;
-//                }
-//            }
-//            db.setTransactionSuccessful();
-//            Log.d(TABLE_NAME, "updateForSync() - count: " + count);
-//            return count;
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        finally {
-//            db.endTransaction();
-//        }
-//
-//        Log.d(TABLE_NAME, "updateForSync() - count: " + -1);
-//
-//        return -1;
-//    }
+    public int updateForSync(DailyFoodInfo input) {
+        try {
+            int count = -1;
+            db.beginTransaction();
+            String where = DATE + "=" + input.getDate() + " AND " + CONSUME_TIME + "=" + input.getConsumeTime();
+            if (update(input, where, null)) {
+                count++;
+            } else if (insert(input) > 0) {
+                count++;
+            }
+
+            db.setTransactionSuccessful();
+            Log.d(TABLE_NAME, "updateForSync() - count: " + count);
+            return count;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            db.endTransaction();
+        }
+
+        Log.d(TABLE_NAME, "updateForSync() - count: " + -1);
+
+        return -1;
+    }
 
 //    public int updateForSyncFromServer(List<JSScsContactValue> syncList) {
 //        try {
@@ -241,4 +240,10 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
 //
 //        return -1;
 //    }
+
+    public List<DailyFoodInfo> getMyProfileAll() {
+//        String orderBy = PROFILE_INDEX + " ASC";
+        List<DailyFoodInfo> list = select(null, null, null, null, null);
+        return list;
+    }
 }

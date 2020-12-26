@@ -1,18 +1,20 @@
 package com.huni.engineer.kokonutjava.common.data;
 
+import com.huni.engineer.kokonutjava.proto.response.JSresponseAnalyze;
+
 public class DailyFoodInfo {
     public static final String TAG = DailyFoodInfo.class.getSimpleName();
 
     //음식이름
     protected String foodName;
     //총 칼로리
-    protected int calories;
+    protected float calories;
     //탄수화물
-    protected int carbohydrate;
+    protected float carbohydrate;
     //단백
-    protected int protein;
+    protected float protein;
     //지방
-    protected int fat;
+    protected float fat;
     //imageKey
     protected String imageKey;
     //년월일 정보
@@ -35,6 +37,17 @@ public class DailyFoodInfo {
         this.consumeTime = consumeTime;
     }
 
+    public void set(JSresponseAnalyze input, String date, int consumeTime) {
+        this.foodName = input.getName();
+        this.calories = input.getCalories();
+        this.carbohydrate = input.getCarbohydrate();
+        this.protein = input.getProtein();
+        this.fat = input.getFat();
+        this.imageKey = input.getImageKey();
+        this.date = date;
+        this.consumeTime = consumeTime;
+    }
+
     public String getFoodName() {
         return foodName;
     }
@@ -43,35 +56,35 @@ public class DailyFoodInfo {
         this.foodName = foodName;
     }
 
-    public int getCalories() {
+    public float getCalories() {
         return calories;
     }
 
-    public void setCalories(int calories) {
+    public void setCalories(float calories) {
         this.calories = calories;
     }
 
-    public int getCarbohydrate() {
+    public float getCarbohydrate() {
         return carbohydrate;
     }
 
-    public void setCarbohydrate(int carbohydrate) {
+    public void setCarbohydrate(float carbohydrate) {
         this.carbohydrate = carbohydrate;
     }
 
-    public int getProtein() {
+    public float getProtein() {
         return protein;
     }
 
-    public void setProtein(int protein) {
+    public void setProtein(float protein) {
         this.protein = protein;
     }
 
-    public int getFat() {
+    public float getFat() {
         return fat;
     }
 
-    public void setFat(int fat) {
+    public void setFat(float fat) {
         this.fat = fat;
     }
 

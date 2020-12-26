@@ -74,6 +74,26 @@ public class KokonutSettings {
 
     public String getSessionKey()                       {return  mSharedPrefs.getString("sessionKey", "");}
 
+    public String setTodayCal(String todayCal) {
+        return save("todayCal", todayCal);
+    }
+
+    public String getTodayCal()                       {return  mSharedPrefs.getString("todayCal", "");}
+
+    public int setCurrentClickPos(int position) {
+        return save("currentPosition", position);
+    }
+
+    //0이면 아침 1이면 점심 2면 저녁.
+    public int getCurrentClickPos() {
+        return mSharedPrefs.getInt("currentPosition", 0);
+    }
+
+    //permission 다시 해제 여부 체크
+    public void    setAlreadyPermissionChecked(String permission, boolean checked) { save(permission, checked); }
+    public boolean getAlreadyPermissionChecked(String permission) { return mSharedPrefs.getBoolean(permission, false); }
+
+
 //    public int getMondaySellAvg() {
 //        return mSharedPrefs.getInt("mondaySellAvg", 0);
 //    }

@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.proto.JSUtil;
 import com.huni.engineer.kokonutjava.proto.response.JSresponseAnalyze;
@@ -26,8 +28,11 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
     private Context mContext;
     private Handler mHandler;
 
-    private ImageView iv_food_info;
+    private ImageView iv_back_press;
+    private PhotoView iv_food_info;
+    private Button  bt_open_dialog;
 
+    private String mPath = null;
     private JSresponseAnalyze myData;
 
     //하단 dialog
@@ -40,14 +45,6 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
 
         mContext = this;
         mHandler = new Handler();
-        mBottomDialog = new BottomDialog();
-        mBottomDialog.show(getSupportFragmentManager(), TAG);
-        mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
-            @Override
-            public void onCloseModal() {
-
-            }
-        });
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -57,17 +54,23 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
         }
 
         myData = JSUtil.json2Object(intent.getStringExtra("info"), JSresponseAnalyze.class);
+        mPath = intent.getStringExtra(CameraPreviewActivity.EXTRA_PATH);
+
+        if (TextUtils.isEmpty(mPath)) {
+            Log.e(TAG, "onCreate(): mPath is NULL!!!");
+        }
 
         Log.d(TAG, "myData: " + myData.toString());
 
-//        mContentPath = intent.getStringExtra(CameraCaptureActivity.EXTRA_PATH);
-//        if (TextUtils.isEmpty(mContentPath)) {
-//            Log.e(TAG, "onCreate(): intent is NULL!!!");
-//            finish();
-//            return;
-//        }
-//
-//        Log.d(TAG, "check - " + mContentPath);
+        mBottomDialog = new BottomDialog(mContext, myData);
+        mBottomDialog.show(getSupportFragmentManager(), TAG);
+        mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
+            @Override
+            public void onCloseModal() {
+
+            }
+        });
+
 
         initComponent();
     }
@@ -75,23 +78,39 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
     private void initComponent() {
         Log.d(TAG, "initComponent");
 
-        iv_food_info = (ImageView) findViewById(R.id.iv_food_info);
+        iv_back_press = (ImageView) findViewById(R.id.iv_back_press);
+        iv_back_press.setOnClickListener(this);
+        iv_food_info = (PhotoView) findViewById(R.id.iv_food_info);
+        bt_open_dialog = (Button) findViewById(R.id.bt_open_dialog);
+        bt_open_dialog.setOnClickListener(this);
 
+        if (!TextUtils.isEmpty(mPath)){
+            GlideUtil.loadImage(mContext, iv_food_info, mPath, false, "initComponent");
+        }
 
-
-
-        LoadImage();
     }
-
-    private void LoadImage() {
-        Log.d(TAG, "LoadImage");
-
-        GlideUtil.loadImage(mContext, iv_food_info, myData.getImageKey(), false, "test");
-    }
-
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back_press:
+                finish();
+                break;
+            case R.id.bt_open_dialog:
+                if (mBottomDialog != null) {
+                    mBottomDialog.show(getSupportFragmentManager(), TAG);
+                } else {
+                    mBottomDialog = new BottomDialog(mContext, myData);
+                    mBottomDialog.show(getSupportFragmentManager(), TAG);
+                    mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
+                        @Override
+                        public void onCloseModal() {
 
+                        }
+                    });
+                }
+
+                break;
+        }
     }
 }

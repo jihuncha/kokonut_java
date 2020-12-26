@@ -45,6 +45,8 @@ import retrofit2.http.Multipart;
 public class CameraPreviewActivity extends AppCompatActivity implements View.OnClickListener{
     public static final String TAG = CameraPreviewActivity.class.getSimpleName();
 
+    public static final String EXTRA_PATH = TAG + ".path";
+
     private Context mContext;
     private Handler mHandler;
 
@@ -92,8 +94,6 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
         Log.d(TAG, "check - " + mContentPath);
 
         initComponent();
-
-//        GlideUtil.loadImage(mContext, iv_picture, mContentPath, true, "onCreate");
     }
 
     private void initComponent() {
@@ -105,7 +105,6 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
         iv_back = (ImageView) findViewById(R.id.iv_back);
 
         GlideUtil.loadImage(mContext, iv_picture, mContentPath, true, "onCreate");
-
     }
 
     @Override
@@ -121,36 +120,13 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                 File uploadFile = new File(mContentPath);
 
                 RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), uploadFile);
-//                MultipartBody.Part body = MultipartBody.Part.createFormData("image", uploadFile.getName(), requestFile);
-//                RequestBody descBody = RequestBody.create(MediaType.parse("text/plain"), idx);
 
+                Log.d(TAG, "tv_bottom_confirm/filePath : " + uploadFile.getAbsolutePath());
+                Log.d(TAG, "tv_bottom_confirm/fileLength : " + uploadFile.length());
 
-                Log.d(TAG, "test : " + uploadFile.getAbsolutePath());
-                Log.d(TAG, "test23 : " + uploadFile.length());
-
-//                RequestBody requestFile =
-//                        RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-// MultipartBody.Part is used to send also the actual file name
                 MultipartBody.Part body =
                         MultipartBody.Part.createFormData("image", uploadFile.getName(), requestFile);
 
-
-//                mViewModel.orgOutFile.setValue(new File(fileDirPath + "ZZALPHOTO_" + DateUtil.toFormatString() + ".jpg"));
-//                try {
-//                    FileOutputStream orgOutStream = null;
-//
-//                    orgOutStream = new FileOutputStream(mContentPath);
-//
-//                    Log.d(TAG, "# orgOutFile.length()2 : " + );
-//
-//                    orgOutStream.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-
-//                NetworkHelper.getInstance(mContext).getApiService().
                 Call<JSresponseAnalyze> resultAnalyze
                         = NetworkHelper.getInstance(mContext).getApiService().analyze(
                                 mContext.getResources().getString(R.string.login_id),
@@ -160,18 +136,17 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                 resultAnalyze.enqueue(new Callback<JSresponseAnalyze>() {
                     @Override
                     public void onResponse(Call<JSresponseAnalyze> call, Response<JSresponseAnalyze> response) {
-                            Log.d(TAG, "test2");
                             Log.d(TAG, "response - " + response.code());
                             LoadingActivity.hide(mContext, "onResponse");
-
 
                             switch (response.code()) {
                                 case 200:
                                     JSresponseAnalyze result = response.body();
-                                    Log.d(TAG, "result_test : " + result.toString());
+                                    Log.d(TAG, "onResponse/200 -  : " + result.toString());
 
                                     Intent intent = new Intent();
                                     intent.setClass(mContext, CameraResultActivity.class);
+                                    intent.putExtra(EXTRA_PATH, mContentPath);
                                     intent.putExtra("info", JSUtil.json2String(result));
                                     startActivity(intent);
 
@@ -183,28 +158,13 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                                     finish();
                                     break;
                             }
-
-
-//                            if (response.isSuccessful()) {
-//                                LoadingActivity.hide(mContext, "onResponse");
-//                                switch (response.code()) {
-//
-//                                    case 200:
-//                                        break;
-//
-//                                    case 500:
-//                                        Log.e(TAG, "500!!");
-//                                        break;
-//                                }
-//                            } else {
-//                                Toast.makeText(mContext,"UPLOAD ERROR!", Toast.LENGTH_SHORT).show();
-//                            }
                     }
 
                     @Override
                     public void onFailure(Call<JSresponseAnalyze> call, Throwable t) {
-                        Log.d(TAG, "why : " + t.getMessage());
-                        Log.d(TAG, "test3");
+                        Log.d(TAG, "onFailure/reason : " + t.getMessage());
+
+                        Toast.makeText(mContext, "사진을 검색할 수 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
 
                         LoadingActivity.hide(mContext, "onFailure");
                     }

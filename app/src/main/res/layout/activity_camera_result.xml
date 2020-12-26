@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/iv_food_info"
         android:layout_width="match_parent"
         android:layout_height="0dp"

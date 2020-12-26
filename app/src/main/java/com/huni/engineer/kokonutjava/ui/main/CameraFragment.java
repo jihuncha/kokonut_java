@@ -22,8 +22,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.huni.engineer.kokonutjava.KokonutSettings;
 import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.common.DatabaseManager;
 import com.huni.engineer.kokonutjava.common.PermissionHandler;
+import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
 import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 
@@ -81,7 +84,15 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     private PermissionHandler mCameraPermission;
 
+    //내 전체 데이터 (음식에 관한)
+    private List<DailyFoodInfo> myDataAll;
+
     private void initView(View root) {
+        mCameraPermission   = new PermissionHandler(mActivity, PermissionHandler.REQ_CAMERA, false);
+
+        myDataAll = new ArrayList<>();
+        myDataAll = DatabaseManager.getInstance(mContext).getMyFoodInfoAll();
+
         cl_parent_view = (CoordinatorLayout) root.findViewById(R.id.cl_parent_view);
 
         appbar = (AppBarLayout) root.findViewById(R.id.appbar);
@@ -95,10 +106,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         tv_camera_title.setOnClickListener(this);
         tv_camera_date_title = (TextView) root.findViewById(R.id.tv_camera_date_title);
         tv_camera_date_title.setOnClickListener(this);
-
-//        nsv_scroll_view = (NestedScrollView) root.findViewById(R.id.nsv_scroll_view);
-
-//        svp_view_pager = (SwipeViewPager) root.findViewById(R.id.svp_view_pager);
 
         tv_camera_title_toolbar = (TextView) root.findViewById(R.id.tv_camera_title_toolbar);
         tv_camera_date_toolbar = (TextView) root.findViewById(R.id.tv_camera_date_toolbar);
@@ -134,7 +141,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         makeCalendarView();
 
-//        initPager();
         initPager();
     }
 
@@ -150,6 +156,11 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         Calendar currentCalendar = Calendar.getInstance();
 
         calendarToday = currentCalendar.get(Calendar.YEAR) + " / " + df.format(currentCalendar.get(Calendar.MONTH) + 1) + " / " + df.format(currentCalendar.get(Calendar.DATE));
+
+        Log.d(TAG, "check : " + calendarToday);
+
+        //오늘 날짜 갖고있기.
+        KokonutSettings.getInstance(mContext).setTodayCal(calendarToday);
 
         tv_camera_date_toolbar.setText(calendarToday);
         tv_camera_date_title.setText(calendarToday.split(" / ")[0] + " / " + calendarToday.split(" / ")[1] );
@@ -225,6 +236,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             String date = calendarDateAll.get(position);
             tv_camera_date_toolbar.setText(date.split("/")[0] + " / " + date.split("/")[1] + " / " +
                     date.split("/")[2]);
+
+            KokonutSettings.getInstance(mContext).setTodayCal(calendarDateAll.get(position));
+
+            Log.d(TAG, "real: " + KokonutSettings.getInstance(mContext).getTodayCal());
 
             super.onPageSelected(position);
         }
@@ -360,7 +375,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 holder.cl_parent_view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG, "test : " );
                         if (checkedPosition != position) {
                             checkedPosition = position;
                             //viewpager 아이템 위치 변경
@@ -417,10 +431,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 layoutManager.setInitialPrefetchItemCount(3);
 
-                DetailAdapter test = new DetailAdapter();
+                DetailAdapter detailAdapter = new DetailAdapter();
 
                 holder.rv_nutrient_container.setLayoutManager(layoutManager);
-                holder.rv_nutrient_container.setAdapter(test);
+                holder.rv_nutrient_container.setAdapter(detailAdapter);
 
 
             }
@@ -443,7 +457,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 rv_nutrient_container = itemView.findViewById(R.id.rv_nutrient_container);
 
             }
-
         }
     }
 
@@ -477,11 +490,16 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                     @Override
                     public void onClick(View view) {
                         Log.d(TAG, "iv_plus_button/onClick");
-//                        if (mCameraPermission.checkPermissions(true, "initiatePopupWindow/tv_profile_take_pic")) {
+
+                        KokonutSettings.getInstance(mContext).setCurrentClickPos(position);
+
+                        Log.d(TAG, "pos check - " + KokonutSettings.getInstance(mContext).getCurrentClickPos());
+
+                        if (mCameraPermission.checkPermissions(true, "initiatePopupWindow/tv_profile_take_pic")) {
                             Intent intent = new Intent();
                             intent.setClass(mActivity, CameraCaptureActivity.class);
                             mActivity.startActivityForResult(intent, 1234);
-//                        }
+                        }
                     }
                 });
 

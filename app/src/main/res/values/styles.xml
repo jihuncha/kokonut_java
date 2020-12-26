@@ -59,4 +59,11 @@
         <item name="android:background">@drawable/dialog_circular_round</item>
     </style>
 
+    <!-- 기본폰트 지정 -->
+    <style name="Basic_Style">
+        <item name="android:typeface">sans</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
 </resources>

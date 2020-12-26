@@ -93,26 +93,18 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
         mCameraView.setPreview(Preview.TEXTURE);
         mCameraView.mapGesture(Gesture.SCROLL_VERTICAL, GestureAction.EXPOSURE_CORRECTION);
 
-//        mCameraView.setMode(Mode.PICTURE);
-//        mCameraView.setPictureFormat(PictureFormat.JPEG);
-//        mCameraView.takePicture();
-
         mCameraView.addCameraListener(new CameraListener() {
             @Override
             public void onPictureTaken(@NonNull PictureResult result) {
                 Log.d(TAG, "onPictureTaken() - result.size: " +
                         result.getSize() + ", width: " + result.getSize().getWidth() +
                         ", height: " + result.getSize().getHeight());
-//                PopupManager.getInstance(mContext).showToast("size: " + result.getSize());
 
-//                showLoading(true, "onPictureTaken");
                 result.toFile(new File(mCapturePath), new FileCallback() {
                     @Override
                     public void onFileReady(@Nullable File file) {
-//                        hideLoading("onPictureTaken.onFileReady");
                         updateStep(STEP_PREVIEW, "onPictureTaken");
 
-                        //ImageCropActivity.startCrop(CameraActivity.this, mCapturePath, 1);
                     }
                 });
             }

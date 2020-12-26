@@ -27,4 +27,10 @@
     <string name="item_position">Item %1$d</string>
 
     <string name="camera_result_consume_all_title">전체 섭취량</string>
+    <string name="tv_save">저장</string>
+
+    <string name="common_button_confirm">확인</string>
+    <string name="common_button_cancel">취소</string>
+
+    <string name="common_permission_not_accepted">해당 기능을 사용하려면 권한이 필요합니다. \n동의하시겠습니까?</string>
 </resources>

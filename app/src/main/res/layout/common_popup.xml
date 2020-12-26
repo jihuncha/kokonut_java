@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/ID_ROOT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22.5dp"
+        android:layout_marginEnd="22.5dp"
+        android:background="@drawable/circular_background_popup"
+        android:minHeight="160dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="22dp"
+            android:paddingTop="18dp"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:id="@+id/ID_POPUP_MSG_TITLE"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="18dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:minHeight="16dp"
+                android:text="adbc"
+                android:textColor="@color/color_292929"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="19dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/ID_POPUP_MSG_CONTENTS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="2sp"
+                    android:maxHeight="200dp"
+                    android:minHeight="22dp"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/color_292929"
+                    android:textSize="16sp"
+                    android:visibility="visible"
+                    tool:text="가나나나나난다다다ㅏ아아아" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ID_POPUP_MSG_BTN_1"
+            style="@style/Basic_Style"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/popup_btn_bottom_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/common_button_confirm"
+            android:textColor="@color/color_4a8eff"
+            android:textSize="17sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ID_POPUP_MSG_BTN_2"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:splitMotionEvents="false"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/ID_POPUP_MSG_BTN_2_LEFT"
+                style="@style/Basic_Style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/popup_btn_left_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/common_button_cancel"
+                android:textColor="@color/color_00813d"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/ID_POPUP_MSG_BTN_2_RIGHT"
+                style="@style/Basic_Style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/popup_btn_right_selector"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:text="@string/common_button_confirm"
+                android:textColor="@color/color_00813d"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
