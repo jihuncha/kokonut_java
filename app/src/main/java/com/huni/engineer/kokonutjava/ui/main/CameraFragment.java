@@ -2,6 +2,7 @@ package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +17,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.KokonutSettings;
@@ -41,6 +52,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     public CameraFragment(Activity activity, LayoutInflater inflater) {
         super(activity, inflater, R.layout.fragment_camera);
+
+        mViewModel = ViewModelProviders.of((FragmentActivity) mActivity).get(CameraFragmentViewModel.class);
 
         // Inflate the layout for this fragment
         initView(mMyView);
@@ -76,6 +89,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     private RecyclerView rv_date_selector;
 
+    private PieChart mPieChart;
+
     //뷰페이저 어댑터
     private ViewPager2 vp_bottom_container;
     private DateAdapter dateAdapter;
@@ -87,7 +102,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     //내 전체 데이터 (음식에 관한)
     private List<DailyFoodInfo> myDataAll;
 
+    private CameraFragmentViewModel mViewModel;
+    private DatabaseManager mDbManager;
+
     private void initView(View root) {
+        Log.d(TAG, "initView");
+
+        initObserve();
+
+        mDbManager = DatabaseManager.getInstance(mContext);
+
+        checkAndGetData();
+
         mCameraPermission   = new PermissionHandler(mActivity, PermissionHandler.REQ_CAMERA, false);
 
         myDataAll = new ArrayList<>();
@@ -111,6 +137,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         tv_camera_date_toolbar = (TextView) root.findViewById(R.id.tv_camera_date_toolbar);
 
         rv_date_selector = (RecyclerView) root.findViewById(R.id.rv_date_selector);
+
+        mPieChart = (PieChart) root.findViewById(R.id.piechart);
 
         //초기화
         ll_toolbar_area.setVisibility(View.GONE);
@@ -142,6 +170,63 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         makeCalendarView();
 
         initPager();
+    }
+
+    private void initObserve() {
+        Log.d(TAG, "initObserve");
+
+        mViewModel.myCurrentData.observe((LifecycleOwner) mActivity, new Observer<List<DailyFoodInfo>>() {
+            @Override
+            public void onChanged(List<DailyFoodInfo> dailyFoodInfos) {
+                Log.d(TAG, "test 222 : " + dailyFoodInfos);
+
+                //TODO 결국 날짜별로 정렬해줘야하나??
+                mViewModel.makeHash(dailyFoodInfos);
+
+//                if (itemAdapter == null) {
+//                    itemAdapter = new ItemAdapter(dailyFoodInfos);
+//                    vp_bottom_container.setAdapter(itemAdapter);
+//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
+//                } else {
+//                    itemAdapter.setData(dailyFoodInfos);
+//                    itemAdapter.notifyDataSetChanged();
+//                    if (vp_bottom_container != null) {
+//                        vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
+//                    }
+//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
+//                }
+            }
+        });
+
+    }
+
+    //초기진입시 데이터를 가져온다.
+    private void checkAndGetData() {
+        Log.d(TAG, "checkAndGetData");
+
+        DecimalFormat df = new DecimalFormat("00");
+        Calendar currentCalendar = Calendar.getInstance();
+
+        String today = null;
+
+        today = currentCalendar.get(Calendar.YEAR) + "-" +
+                df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
+                df.format(currentCalendar.get(Calendar.DATE));
+
+        Log.d(TAG, "today : " + today);
+
+        //일주일 뒤 계산
+        String afterOneWeek = null;
+
+        currentCalendar.add(currentCalendar.DATE, 6);
+        afterOneWeek = currentCalendar.get(Calendar.YEAR) + "-" +
+                df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
+                df.format(currentCalendar.get(Calendar.DATE));
+
+        Log.d(TAG, "afterOneWeek : " + afterOneWeek);
+
+        //ViewModel 에 전달
+        mViewModel.myCurrentData.postValue(mDbManager.getFoodDataForDate(today, afterOneWeek));
     }
 
     //오늘 날짜 저장
@@ -203,22 +288,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         }
     }
 
+    //하단 pager
     private void initPager() {
         if (itemAdapter == null) {
             itemAdapter = new ItemAdapter();
             vp_bottom_container.setAdapter(itemAdapter);
             vp_bottom_container.registerOnPageChangeCallback(mPageChange);
         } else {
-//            itemAdapter.setData(myProfileImageList);
             itemAdapter.notifyDataSetChanged();
             if (vp_bottom_container != null) {
                 vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
             }
             vp_bottom_container.registerOnPageChangeCallback(mPageChange);
-//            ll_pager.invalidate();
-//            if (currentPosition - 1 >= 0) {
-//                ll_pager.setCurrentItem(currentPosition - 1);
-//            }
         }
     }
 
@@ -409,9 +490,19 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         }
     }
 
-    //하단 viewPager
+    //하단 viewPager -> viewPager
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+        public List<DailyFoodInfo> myList;
+
         public ItemAdapter(){}
+
+        public ItemAdapter(List<DailyFoodInfo> myList) {
+            this.myList = myList;
+        }
+
+        public void setData(List<DailyFoodInfo> myList) {
+            this.myList = myList;
+        }
 
         @NonNull
         @Override
@@ -435,11 +526,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 holder.rv_nutrient_container.setLayoutManager(layoutManager);
                 holder.rv_nutrient_container.setAdapter(detailAdapter);
-
-
             }
         }
 
+        //고정값
         @Override
         public int getItemCount() {
             return 7;
@@ -543,5 +633,73 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         }
     }
+
+    /**
+     *
+     *  원 그래프 그리기.
+     *
+     * */
+//    public void initPieChart(DailyFoodInfo pieChartData) {
+//        Log.d(TAG, "initPieChart");
+//
+//        if (pieChartData == null) {
+//            Log.e(TAG, "processPieData NULL!!");
+//            return;
+//        }
+//
+//        Log.d(TAG, "processPieData - " + pieChart);
+//        pieChart.setUsePercentValues(true);
+//        pieChart.getDescription().setEnabled(false);
+//        pieChart.setExtraOffsets(5,10,5,5);
+//
+//        pieChart.setDragDecelerationFrictionCoef(0.95f);
+//
+//        pieChart.setDrawHoleEnabled(false);
+//        pieChart.setHoleColor(Color.WHITE);
+//        pieChart.setTransparentCircleRadius(61f);
+//
+//        ArrayList<PieEntry> yValues = new ArrayList<PieEntry>();
+//
+//        yValues.add(new PieEntry(Integer.parseInt(pieChartData.getSellFood()),getResources().getString(R.string.main_deadline_pie_graph_food)));
+//        yValues.add(new PieEntry(Integer.parseInt(pieChartData.getSellBeer()),getResources().getString(R.string.main_deadline_pie_graph_beer)));
+//        yValues.add(new PieEntry(Integer.parseInt(pieChartData.getSellCock()),getResources().getString(R.string.main_deadline_pie_graph_cock)));
+//
+//        Description description = new Description();
+//        description.setText(" "); //라벨
+//        description.setTextSize(15);
+//        pieChart.setDescription(description);
+//        //하단 상세 설명(?) 안보이게 설정
+//        pieChart.getDescription().setEnabled(false);
+//        pieChart.setNoDataText("test");
+//
+//        //하단 차트 정보 (막대 색갈별 정보) 안보이게 조정
+//        Legend legend = pieChart.getLegend();
+//        legend.setEnabled(false);
+//
+////        pieChart.animateY(1000, Easing.EasingOption.EaseInOutCubic); //애니메이션
+//
+//        PieDataSet dataSet = new PieDataSet(yValues," ");
+//        dataSet.setSliceSpace(3f);
+//        dataSet.setSelectionShift(5f);
+//        int [] color={ getResources().getColor(R.color.color_fb7a63), getResources().getColor(R.color.color_fcc849),
+//                getResources().getColor(R.color.color_6bd67c), getResources().getColor(R.color.color_c7abf6),
+//                getResources().getColor(R.color.color_839afe), getResources().getColor(R.color.color_81c6fc),
+//                getResources().getColor(R.color.color_4993cd)
+//        };
+//
+//        dataSet.setColors(color);
+//        pieChart.setDrawMarkers(false);
+//        pieChart.setDrawEntryLabels(false);
+//        pieChart.setTouchEnabled(false);
+//
+//        PieData data = new PieData((dataSet));
+//        //value 값 숨기기.
+//        data.setValueTextSize(10f);
+//        data.setValueTextColor(Color.YELLOW);
+//        data.setDrawValues(false);
+//
+//        pieChart.setData(data);
+//    }
+
 
 }

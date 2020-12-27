@@ -10,6 +10,8 @@ import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.huni.engineer.kokonutjava.database.DatabaseHelper.TAG;
+
 public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
     /*** Table 이름 정의 *******************/
     public static final String TABLE_NAME = "tbl_daily_food_data";
@@ -241,9 +243,18 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
 //        return -1;
 //    }
 
-    public List<DailyFoodInfo> getMyProfileAll() {
-//        String orderBy = PROFILE_INDEX + " ASC";
+    public List<DailyFoodInfo> getMyFoodInfoAll() {
         List<DailyFoodInfo> list = select(null, null, null, null, null);
         return list;
     }
+
+    public List<DailyFoodInfo> getDataBetweenDate(String startDate, String endDate) {
+        Log.d(TAG, "startDate : " + startDate + ", endDate - " + endDate);
+
+        String sql = "SELECT * FROM " + tableName + " WHERE " +
+                DATE + " BETWEEN " + "'" + startDate + "'" + " AND " + "'" + endDate + "'";
+
+        return select_raw(sql);
+    }
 }
+

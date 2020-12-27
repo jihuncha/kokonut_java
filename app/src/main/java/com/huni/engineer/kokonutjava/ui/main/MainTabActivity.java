@@ -45,7 +45,7 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
         mActivity = this;
         mContext = this;
 
-        Log.d(TAG, "test : " + KokonutSettings.getInstance(mContext).getSessionKey());
+        Log.d(TAG, "onCreate/SessionKey : " + KokonutSettings.getInstance(mContext).getSessionKey());
 
         //initialize the tabs...
         mTabFragments[MAIN_TAB_CAMERA] = new CameraFragment(this, getLayoutInflater());

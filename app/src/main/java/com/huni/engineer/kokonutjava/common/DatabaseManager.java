@@ -80,10 +80,23 @@ public class DatabaseManager {
 
         List<DailyFoodInfo> myProfileList = new ArrayList<>();
 
-        myProfileList = mTblDailyFoodData.getMyProfileAll();
+        myProfileList = mTblDailyFoodData.getMyFoodInfoAll();
 
         Log.d(TAG,"getMyFoodInfoAll/result - " + myProfileList.toString());
 
         return myProfileList;
+    }
+
+    public List<DailyFoodInfo> getFoodDataForDate(String startDate, String endDate) {
+        Log.d(TAG, "getFoodDataForDate - " + startDate + ", end - " + endDate);
+
+        List<DailyFoodInfo> myFoodList = new ArrayList<>();
+
+        myFoodList = mTblDailyFoodData.getDataBetweenDate(startDate, endDate);
+
+        Log.d(TAG, "getFoodDataForDate - " + myFoodList);
+
+        return myFoodList;
+
     }
 }
