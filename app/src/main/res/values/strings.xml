@@ -33,4 +33,10 @@
 
     <string name="common_permission_not_accepted">해당 기능을 사용하려면 권한이 필요합니다. \n동의하시겠습니까?</string>
 
+    <string name="camera_preview_select">사진 사용</string>
+
+    <string name="camera_popup_title">사진</string>
+    <string name="camera_popup_capture">사진 촬영</string>
+    <string name="camera_popup_select">사진 선택</string>
+
 </resources>

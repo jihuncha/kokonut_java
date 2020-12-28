@@ -1,6 +1,11 @@
 package com.huni.engineer.kokonutjava.proto;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class JSUtil {
     private static Gson[] sGson = {
@@ -43,4 +48,19 @@ public class JSUtil {
         //return new Gson().toJson(obj);
     }
 
+    /**
+     * JSON 문자열 리스트를 Object로 변환한다.
+     * @param str
+     * @param classOfT
+     * @return
+     */
+    public static <T> List<T> jsonList2Object(String str, Class<T[]> classOfT) {
+        T[] json2Object = new Gson().fromJson(str, classOfT);
+        if (TextUtils.isEmpty(str)) {
+            return null;
+        }
+        return Arrays.asList(json2Object);
+    }
+
 }
+

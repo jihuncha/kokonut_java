@@ -1,6 +1,8 @@
 package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Application;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -16,7 +18,9 @@ public class CameraFragmentViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<DailyFoodInfo>> myCurrentData = new MutableLiveData<>();
 
-    private HashMap<Integer, List<DailyFoodInfo>> myItemHash = new HashMap<>();
+    private HashMap<String, DailyFoodInfo> myItemHash = new HashMap<>();
+
+    public MutableLiveData<HashMap<String, DailyFoodInfo>> myAllData = new MutableLiveData<>();
 
     //생성자
     public CameraFragmentViewModel(@NonNull Application application) {
@@ -25,7 +29,17 @@ public class CameraFragmentViewModel extends AndroidViewModel {
 
 
     public void makeHash(List<DailyFoodInfo> inputList) {
-        
+        myItemHash = new HashMap<>();
+
+        for (DailyFoodInfo test : inputList) {
+            myItemHash.put(test.getDate() + "-" + test.getConsumeTime(), test);
+        }
+
+        Log.d(TAG, "test : " + myItemHash.toString());
+
+        myAllData = new MutableLiveData<>();
+
+        myAllData.postValue(myItemHash);
     }
 
 

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.huni.engineer.kokonutjava.KokonutDefine;
 import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.common.FileManager;
 import com.huni.engineer.kokonutjava.utils.DateUtils;
@@ -341,7 +342,7 @@ public class CameraCaptureActivity extends AppCompatActivity implements View.OnC
                 if (mCameraView.isOpened()) {
                     mCameraView.close();
                 }
-                CameraPreviewActivity.startCameraPreview(this, mCapturePath, 1234);
+                CameraPreviewActivity.startCameraPreview(this, mCapturePath, KokonutDefine.REQ_CAMERA_PREVIEW);
                 break;
         }
     }

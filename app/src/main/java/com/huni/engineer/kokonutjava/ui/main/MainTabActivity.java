@@ -1,12 +1,16 @@
 package com.huni.engineer.kokonutjava.ui.main;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,8 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.huni.engineer.kokonutjava.KokonutDefine;
 import com.huni.engineer.kokonutjava.KokonutSettings;
 import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.common.MediaUtil;
+import com.huni.engineer.kokonutjava.proto.JSUtil;
+import com.huni.engineer.kokonutjava.ui.main.camera.CameraPreviewActivity;
+
+import java.util.List;
 
 public class MainTabActivity extends AppCompatActivity implements View.OnClickListener{
     private final String TAG = MainTabActivity.class.getSimpleName();
@@ -208,5 +218,45 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
 
     private int getTabId2Index(int tabId) {
         return tabId;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult : requestCode - " + requestCode + ", resultCode - " + resultCode + ", data - " + data);
+
+        switch (requestCode) {
+            case KokonutDefine.REQ_CAMERA_SELECT:
+                Log.d(TAG, "KokonutDefine.REQ_CAMERA_SELECT");
+
+                if (resultCode != RESULT_OK) {
+                    Log.e(TAG, "procREQCD_SELECT_MEDIA() - resultCode != RESULT_OK");
+                    return;
+                }
+
+                Uri myPath = null;
+                if (data != null) {
+                    myPath = data.getData();
+                } else {
+                    Log.e(TAG, "data NULL!");
+                    return;
+                }
+
+                String url = getPathFromUri(myPath);
+
+                CameraPreviewActivity.startCameraPreview(this, url, KokonutDefine.REQ_CAMERA_PREVIEW);
+
+                break;
+        }
+    }
+
+    public String getPathFromUri(Uri uri){
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+        cursor.moveToNext();
+        String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+        cursor.close();
+
+        return path;
     }
 }

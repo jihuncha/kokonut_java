@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_parent_view"
@@ -27,10 +26,10 @@
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp"
             app:layout_collapseMode="pin"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-<!--            app:layout_scrollFlags="scroll|enterAlways"-->
+            <!--            app:layout_scrollFlags="scroll|enterAlways"-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -67,8 +66,8 @@
                     android:id="@+id/rv_date_selector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="17.3dp"
                     android:layout_marginLeft="19.3dp"
+                    android:layout_marginTop="17.3dp"
                     android:layout_marginRight="19.3dp"
                     app:layout_constraintTop_toBottomOf="@+id/tv_camera_date_title" />
 
@@ -76,8 +75,8 @@
                     android:id="@+id/tv_today_weight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
                     android:layout_marginLeft="30.3dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/today_weight_title"
                     android:textColor="@color/color_000000"
                     android:textSize="17dp"
@@ -88,8 +87,8 @@
                     android:id="@+id/tv_today_consume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
                     android:layout_marginLeft="30.3dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/today_consume_title"
                     android:textColor="@color/color_000000"
                     android:textSize="17dp"
@@ -157,19 +156,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:id="@+id/nsv_scroll_view"-->
-<!--        android:layout_marginTop="?actionBarSize"-->
-<!--        android:layout_marginBottom="?actionBarSize"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_bottom_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-<!--    </androidx.core.widget.NestedScrollView>-->
-
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_bottom_container"
+        android:layout_marginBottom="?actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

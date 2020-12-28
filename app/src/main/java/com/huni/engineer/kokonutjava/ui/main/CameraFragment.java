@@ -1,12 +1,16 @@
 package com.huni.engineer.kokonutjava.ui.main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +37,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.huni.engineer.kokonutjava.KokonutDefine;
 import com.huni.engineer.kokonutjava.KokonutSettings;
 import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.common.DatabaseManager;
@@ -44,6 +49,7 @@ import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -105,6 +111,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     private CameraFragmentViewModel mViewModel;
     private DatabaseManager mDbManager;
 
+    private Dialog cameraPopup;
+
     private void initView(View root) {
         Log.d(TAG, "initView");
 
@@ -145,6 +153,9 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         tv_camera_title_toolbar.setVisibility(View.GONE);
         tv_camera_date_toolbar.setVisibility(View.GONE);
 
+        vp_bottom_container = (ViewPager2) root.findViewById(R.id.vp_bottom_container);
+        vp_bottom_container.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+
         appbar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -163,9 +174,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 }
             }
         });
-
-        vp_bottom_container = (ViewPager2) root.findViewById(R.id.vp_bottom_container);
-        vp_bottom_container.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         makeCalendarView();
 
@@ -189,6 +197,24 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 //                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
 //                } else {
 //                    itemAdapter.setData(dailyFoodInfos);
+//                    itemAdapter.notifyDataSetChanged();
+//                    if (vp_bottom_container != null) {
+//                        vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
+//                    }
+//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
+//                }
+            }
+        });
+
+        mViewModel.myAllData.observe((LifecycleOwner) mActivity, new Observer<HashMap<String, DailyFoodInfo>>() {
+            @Override
+            public void onChanged(HashMap<String, DailyFoodInfo> stringDailyFoodInfoHashMap) {
+//                if (itemAdapter == null) {
+//                    itemAdapter = new ItemAdapter(stringDailyFoodInfoHashMap);
+//                    vp_bottom_container.setAdapter(itemAdapter);
+//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
+//                } else {
+//                    itemAdapter.setData(stringDailyFoodInfoHashMap);
 //                    itemAdapter.notifyDataSetChanged();
 //                    if (vp_bottom_container != null) {
 //                        vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
@@ -585,10 +611,14 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                         Log.d(TAG, "pos check - " + KokonutSettings.getInstance(mContext).getCurrentClickPos());
 
-                        if (mCameraPermission.checkPermissions(true, "initiatePopupWindow/tv_profile_take_pic")) {
-                            Intent intent = new Intent();
-                            intent.setClass(mActivity, CameraCaptureActivity.class);
-                            mActivity.startActivityForResult(intent, 1234);
+                        if (mCameraPermission.checkPermissions(true,
+                                "initiatePopupWindow/tv_profile_take_pic")) {
+
+                            showCameraPopup();
+
+//                            Intent intent = new Intent();
+//                            intent.setClass(mActivity, CameraCaptureActivity.class);
+//                            mActivity.startActivityForResult(intent, 1234);
                         }
                     }
                 });
@@ -632,6 +662,64 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             }
 
         }
+    }
+
+    public void showCameraPopup() {
+        //다이얼로그 생성
+        cameraPopup = new Dialog(mContext);
+        TextView tv_pic_title;
+        TextView tv_take_pic;
+        TextView tv_choose_pic;
+
+        cameraPopup.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        cameraPopup.setContentView(R.layout.camera_popup_window_layout);
+        cameraPopup.setCanceledOnTouchOutside(true);
+        cameraPopup.setCancelable(true);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(cameraPopup.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        //background 투명하게 적용
+        cameraPopup.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        tv_take_pic = cameraPopup.findViewById(R.id.tv_take_pic);
+        tv_take_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "tv_take_pic/onClick");
+                //사진 찍기
+                if (mCameraPermission.checkPermissions(true,
+                        "showCameraPopup/tv_take_pic")) {
+                            Intent intent = new Intent();
+                            intent.setClass(mActivity, CameraCaptureActivity.class);
+                            mActivity.startActivityForResult(intent, KokonutDefine.REQ_CAMERA_CAPTURE);
+                }
+
+                if (cameraPopup != null) {
+                    cameraPopup.dismiss();
+                }
+            }
+        });
+
+        tv_choose_pic = cameraPopup.findViewById(R.id.tv_choose_pic);
+        tv_choose_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "tv_profile_choose_pic/onClick");
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                mActivity.startActivityForResult(intent,  KokonutDefine.REQ_CAMERA_SELECT);
+
+                if (cameraPopup != null) {
+                    cameraPopup.dismiss();
+                }
+            }
+        });
+
+        cameraPopup.show();
+        cameraPopup.getWindow().setAttributes(lp);
     }
 
     /**
