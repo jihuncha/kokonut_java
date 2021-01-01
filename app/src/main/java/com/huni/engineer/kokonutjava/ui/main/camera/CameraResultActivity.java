@@ -62,7 +62,7 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
 
         Log.d(TAG, "myData: " + myData.toString());
 
-        mBottomDialog = new BottomDialog(mContext, myData);
+        mBottomDialog = new BottomDialog(mContext, myData, mPath);
         mBottomDialog.show(getSupportFragmentManager(), TAG);
         mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
             @Override
@@ -100,7 +100,7 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
                 if (mBottomDialog != null) {
                     mBottomDialog.show(getSupportFragmentManager(), TAG);
                 } else {
-                    mBottomDialog = new BottomDialog(mContext, myData);
+                    mBottomDialog = new BottomDialog(mContext, myData, mPath);
                     mBottomDialog.show(getSupportFragmentManager(), TAG);
                     mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
                         @Override

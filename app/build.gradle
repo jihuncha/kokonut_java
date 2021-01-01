@@ -37,10 +37,10 @@ android {
     //TODO storepassword...
     signingConfigs {
         release {
-//            storeFile file("signature/kokonut.jks")
-//            storePassword "dhzlxhzl"
-//            keyAlias "kokonut_release"
-//            keyPassword "dhzlxhzl"
+//            storeFile file("signature/myKey.jks")
+//            storePassword "wlgns6"
+//            keyAlias "kokonut_key_second"
+//            keyPassword "wlgns6"
         }
         debug {
 //            storeFile file("signature/kokonut_debug.jks")
@@ -49,15 +49,16 @@ android {
 
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
             zipAlignEnabled true
         }
 
         debug {
             minifyEnabled false
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
             zipAlignEnabled true
             debuggable true
             jniDebuggable true

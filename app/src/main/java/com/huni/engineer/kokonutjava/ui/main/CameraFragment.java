@@ -3,6 +3,8 @@ package com.huni.engineer.kokonutjava.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -46,11 +48,15 @@ import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
 import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
+
+import javax.security.auth.login.LoginException;
 
 
 public class CameraFragment extends BaseTabFragment implements View.OnClickListener{
@@ -113,6 +119,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     private Dialog cameraPopup;
 
+    private List<String> myDateList;
+
     private void initView(View root) {
         Log.d(TAG, "initView");
 
@@ -121,6 +129,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         mDbManager = DatabaseManager.getInstance(mContext);
 
         checkAndGetData();
+
+        myDateList = new ArrayList<>();
 
         mCameraPermission   = new PermissionHandler(mActivity, PermissionHandler.REQ_CAMERA, false);
 
@@ -180,16 +190,52 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         initPager();
     }
 
+
+    //hash 로 아이템 생성.
+    HashMap<String, List<DailyFoodInfo>> myHashMap = new HashMap<>();
     private void initObserve() {
         Log.d(TAG, "initObserve");
 
         mViewModel.myCurrentData.observe((LifecycleOwner) mActivity, new Observer<List<DailyFoodInfo>>() {
             @Override
             public void onChanged(List<DailyFoodInfo> dailyFoodInfos) {
-                Log.d(TAG, "test 222 : " + dailyFoodInfos);
+                Log.d(TAG, "myCurrentData/onChanged : " + dailyFoodInfos);
+
+                for (DailyFoodInfo input : dailyFoodInfos) {
+                    if (myHashMap.get(input.getDate()) != null) {
+                        myHashMap.get(input.getDate()).add(input);
+                    } else {
+                        myHashMap.put(input.getDate(), new ArrayList<DailyFoodInfo>());
+                        myHashMap.get(input.getDate()).add(input);
+                    }
+                }
+
+                Log.d(TAG, "check : " + myHashMap.toString());
+
+                initPagerTest(myHashMap);
+
+//                RecyclerView test1 = new RecyclerView(mContext);
+//                RecyclerView test2 = new RecyclerView(mContext);
+//                RecyclerView test3 = new RecyclerView(mContext);
+//                RecyclerView test4 = new RecyclerView(mContext);
+//                RecyclerView test5 = new RecyclerView(mContext);
+//                RecyclerView test6 = new RecyclerView(mContext);
+//                RecyclerView test7 = new RecyclerView(mContext);
+//
+//                Vector<View> pages = new Vector<View>();
+//
+//                pages.add(test1);
+//                pages.add(test2);
+//                pages.add(test3);
+//                pages.add(test4);
+//                pages.add(test5);
+//                pages.add(test6);
+//                pages.add(test7);
+//
+//                test1.setAdapter(new DetailAdapter());
 
                 //TODO 결국 날짜별로 정렬해줘야하나??
-                mViewModel.makeHash(dailyFoodInfos);
+//                mViewModel.makeHash(dailyFoodInfos);
 
 //                if (itemAdapter == null) {
 //                    itemAdapter = new ItemAdapter(dailyFoodInfos);
@@ -258,6 +304,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     //오늘 날짜 저장
     private String calendarToday;
     private List<String> calendarDateAll;
+    private List<String> calendarDateOnlyDate;
 //    private List<Integer> calendarDayOfWeek;
 
     private void makeCalendarView() {
@@ -276,17 +323,27 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         tv_camera_date_toolbar.setText(calendarToday);
         tv_camera_date_title.setText(calendarToday.split(" / ")[0] + " / " + calendarToday.split(" / ")[1] );
 
+        calendarDateOnlyDate = new ArrayList<>();
         calendarDateAll = new ArrayList<>();
 
         calendarDateAll.add(
                 df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
                 df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
 
+        calendarDateOnlyDate.add(  df.format(currentCalendar.get(Calendar.YEAR)) + "-"
+                + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
+                df.format(currentCalendar.get(Calendar.DATE)));
+
         for (int i = 1; i < 7; i++) {
             currentCalendar.add(currentCalendar.DATE , 1);
             calendarDateAll.add(
                     df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
                     df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
+
+            calendarDateOnlyDate.add(  df.format(currentCalendar.get(Calendar.YEAR)) + "-"
+                    + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
+                    df.format(currentCalendar.get(Calendar.DATE)));
+
         }
 
         Log.d(TAG, "calendarToday - " + calendarToday + ", CalendarDateAll - " +
@@ -327,6 +384,24 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             }
             vp_bottom_container.registerOnPageChangeCallback(mPageChange);
         }
+    }
+
+    private void initPagerTest(HashMap <String, List<DailyFoodInfo>> input) {
+        List<List<DailyFoodInfo>> myList = new ArrayList<>();
+
+        for (int i = 0; i < calendarDateOnlyDate.size(); i++) {
+            String test = calendarDateOnlyDate.get(i);
+            Log.e(TAG, "test : " + test);
+            myList.add(new ArrayList<>());
+            if (input.containsKey(test)) {
+                myList.get(i).addAll(input.get(test));
+            }
+        }
+
+        Log.e(TAG, "result - " + myList.toString());
+
+        itemAdapter = new ItemAdapter(myList);
+        vp_bottom_container.setAdapter(itemAdapter);
     }
 
     //하단 viewpager 이동을 상단에 반영.
@@ -518,17 +593,31 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //하단 viewPager -> viewPager
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
-        public List<DailyFoodInfo> myList;
+//        public List<DailyFoodInfo> myList;
+        public List<List<DailyFoodInfo>> myInputList;
+
+
+        public DetailAdapter mAdapterFirst;
+        public DetailAdapter mAdapterSecond;
+        public DetailAdapter mAdapterThird;
+        public DetailAdapter mAdapterFourth;
+        public DetailAdapter mAdapterFifth;
+        public DetailAdapter mAdapterSix;
+        public DetailAdapter mAdapterSeven;
 
         public ItemAdapter(){}
 
-        public ItemAdapter(List<DailyFoodInfo> myList) {
-            this.myList = myList;
+//        public ItemAdapter(List<DailyFoodInfo> myList) {
+//            this.myList = myList;
+//        }
+
+        public ItemAdapter(List<List<DailyFoodInfo>> inputList) {
+            this.myInputList = inputList;
         }
 
-        public void setData(List<DailyFoodInfo> myList) {
-            this.myList = myList;
-        }
+//        public void setData(List<DailyFoodInfo> myList) {
+//            this.myList = myList;
+//        }
 
         @NonNull
         @Override
@@ -536,6 +625,36 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             ItemViewHolder vh;
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewpager_inside_sample, parent, false);
             vh = new ItemViewHolder(v);
+
+            for (int i = 0; i < myInputList.size(); i++) {
+                switch (i) {
+                    case 0:
+                        mAdapterFirst = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 1:
+                        mAdapterSecond = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 2:
+                        mAdapterThird = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 3:
+                        mAdapterFourth = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 4:
+                        mAdapterFifth = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 5:
+                        mAdapterSix = new DetailAdapter(myInputList.get(i));
+                        break;
+                    case 6:
+                        mAdapterSeven = new DetailAdapter(myInputList.get(i));
+                        break;
+
+                    default:
+                        Log.e(TAG, "error! - " + i);
+                        break;
+                }
+            }
             return vh;
         }
 
@@ -548,10 +667,37 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 layoutManager.setInitialPrefetchItemCount(3);
 
-                DetailAdapter detailAdapter = new DetailAdapter();
-
                 holder.rv_nutrient_container.setLayoutManager(layoutManager);
-                holder.rv_nutrient_container.setAdapter(detailAdapter);
+                switch (position) {
+                    case 0 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterFirst);
+                        break;
+
+                    case 1 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterSecond);
+                        break;
+
+                    case 2 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterThird);
+                        break;
+
+                    case 3 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterFourth);
+                        break;
+
+                    case 4 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterFifth);
+                        break;
+
+                    case 5 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterSix);
+                        break;
+
+                    case 6 :
+                        holder.rv_nutrient_container.setAdapter(mAdapterSeven);
+                        break;
+                }
+//                holder.rv_nutrient_container.setAdapter(mAdaprer);
             }
         }
 
@@ -561,12 +707,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             return 7;
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return super.getItemId(position);
+        }
+
         class ItemViewHolder extends RecyclerView.ViewHolder {
             public RecyclerView rv_nutrient_container;
-
-            public void setData() {
-
-            }
 
             public ItemViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -578,6 +730,18 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //내부 recyclerview
     public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        public List<DailyFoodInfo> myData;
+
+        public DetailAdapter(){}
+
+        public DetailAdapter(List<DailyFoodInfo> inputList) {
+            this.myData = inputList;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
 
         @NonNull
         @Override
@@ -593,12 +757,76 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 switch (position) {
                     case 0 :
                         viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_morning));
+
+                        if (myData != null) {
+                            for (DailyFoodInfo test : myData) {
+                                if (test.getConsumeTime() == 0) {
+                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+
+                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                    File imgFile = new File(test.getPath());
+
+                                    if(imgFile.exists()){
+
+                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                    }
+                                }
+                            }
+                        }
+
                         break;
                     case 1:
                         viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_noon));
+
+                        if (myData != null) {
+                            for (DailyFoodInfo test : myData) {
+                                if (test.getConsumeTime() == 1) {
+                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+
+                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                    File imgFile = new File(test.getPath());
+
+                                    if(imgFile.exists()){
+
+                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case 2:
                         viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_evening));
+
+                        if (myData != null) {
+                            for (DailyFoodInfo test : myData) {
+                                if (test.getConsumeTime() == 2) {
+                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+
+                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                    File imgFile = new File(test.getPath());
+
+                                    if(imgFile.exists()){
+
+                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                    }
+                                }
+                            }
+                        }
                         break;
                 }
 
@@ -641,6 +869,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             TextView tv_nutrient_item_third_detail;
 
             RelativeLayout rl_bottom_container;
+            ImageView iv_food_data;
             ImageView iv_no_diet_data;
             TextView tv_no_diet_data;
             TextView tv_set_time;
@@ -655,6 +884,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 tv_nutrient_item_third_detail = (TextView) itemView.findViewById(R.id.tv_nutrient_item_third_detail);
 
                 rl_bottom_container = (RelativeLayout) itemView.findViewById(R.id.rl_bottom_container);
+                iv_food_data = (ImageView) itemView.findViewById(R.id.iv_food_data);
                 iv_no_diet_data = (ImageView) itemView.findViewById(R.id.iv_no_diet_data);
                 tv_no_diet_data = (TextView) itemView.findViewById(R.id.tv_no_diet_data);
                 tv_set_time = (TextView) itemView.findViewById(R.id.tv_set_time);

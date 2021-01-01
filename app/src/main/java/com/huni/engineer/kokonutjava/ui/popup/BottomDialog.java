@@ -48,6 +48,8 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
 
     private Button bt_save_data;
 
+    private String mPath = null;
+
     //check 를 위해 public 설정
     public FoodListAdapter mAdapter;
 
@@ -61,9 +63,10 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
 
     public BottomDialog(){ }
 
-    public BottomDialog(Context mContext, JSresponseAnalyze myItem) {
+    public BottomDialog(Context mContext, JSresponseAnalyze myItem, String mPath) {
         this.mContext = mContext;
         this.myItem = myItem;
+        this.mPath = mPath;
     }
 
 //    public void setListener(OnClickListener listener) {
@@ -187,6 +190,8 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
                     DailyFoodInfo myInfo = new DailyFoodInfo();
                     myInfo.set(myItem, array_all[0] + "-" + array_all[1] + "-" + array_all[2],
                             KokonutSettings.getInstance(mContext).getCurrentClickPos());
+
+                    myInfo.setPath(mPath);
 
                     Log.d(TAG, "check - " + myInfo.toString());
 

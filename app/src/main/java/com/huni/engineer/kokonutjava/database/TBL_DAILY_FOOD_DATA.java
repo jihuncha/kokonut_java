@@ -26,6 +26,7 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
     public static final String IMAGE_KEY                = "image_key";                      //imageKey
     public static final String DATE                     = "date";                           //년월일 정보
     public static final String CONSUME_TIME             = "consume_time";                   //아침 점심 저녁
+    public static final String IMAGE_PATH               = "image_path";                           //파일경로 추가...
 
 
     /*** Table 생성 쿼리 **********************/
@@ -39,7 +40,8 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
                 FAT                                                 + " INTEGER," +
                 IMAGE_KEY                                           + " TEXT," +
                 DATE                                                + " TEXT," +
-                CONSUME_TIME			                            + " INTEGER DEFAULT 0" +
+                CONSUME_TIME			                            + " INTEGER DEFAULT 0," +
+                IMAGE_PATH                                          + " TEXT" +
             ");";
 
     /*** Table 생성 쿼리 **********************/
@@ -47,7 +49,8 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
 
     /*** INDEX 정의 **********************/
     protected static class INDEX {
-        public int ID, FOOD_NAME, CALORIES, CARBOHYDRATE, PROTEIN, FAT, IMAGE_KEY, DATE, CONSUME_TIME;
+        public int ID, FOOD_NAME, CALORIES, CARBOHYDRATE,
+                PROTEIN, FAT, IMAGE_KEY, DATE, CONSUME_TIME, IMAGE_PATH;
     }
 
     protected static INDEX cursorToIndex(Cursor c) throws Exception {
@@ -61,6 +64,7 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
         idx.IMAGE_KEY = c.getColumnIndex(IMAGE_KEY);
         idx.DATE = c.getColumnIndex(DATE);
         idx.CONSUME_TIME = c.getColumnIndex(CONSUME_TIME);
+        idx.IMAGE_PATH = c.getColumnIndex(IMAGE_PATH);
         return idx;
     }
 
@@ -96,6 +100,7 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
         values.put(IMAGE_KEY, o.getImageKey());
         values.put(DATE, o.getDate());
         values.put(CONSUME_TIME, o.getConsumeTime());
+        values.put(IMAGE_PATH, o.getPath());
         return values;
     }
 
@@ -126,6 +131,7 @@ public class TBL_DAILY_FOOD_DATA extends TABLE<DailyFoodInfo> {
                 if (idx.IMAGE_KEY != -1) contact.setImageKey(c.getString(idx.IMAGE_KEY));
                 if (idx.DATE != -1) contact.setDate(c.getString(idx.DATE));
                 if (idx.CONSUME_TIME != -1) contact.setConsumeTime(c.getInt(idx.CONSUME_TIME));
+                if (idx.IMAGE_PATH != -1) contact.setPath(c.getString(idx.IMAGE_PATH));
                 list.add(contact);
             }
             while (c.moveToNext());

@@ -152,11 +152,25 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
 
                                     break;
 
-                                case 500:
-                                    Log.e(TAG, "500!!");
+                                default:
+                                    JSresponseAnalyze test = new JSresponseAnalyze();
+                                    test.setCalories(123);
+                                    test.setCarbohydrate(12);
+                                    test.setFat(23);
+                                    test.setName("test");
+                                    test.setImageKey("dsadsa");
+                                    test.setProbability(34);
+                                    test.setProtein(55);
 
-                                    finish();
+                                    Intent intentSecond = new Intent();
+                                    intentSecond.setClass(mContext, CameraResultActivity.class);
+                                    intentSecond.putExtra(EXTRA_PATH, mContentPath);
+                                    intentSecond.putExtra("info", JSUtil.json2String(test));
+                                    startActivity(intentSecond);
+
                                     break;
+
+
                             }
                     }
 

@@ -1,12 +1,10 @@
 package com.huni.engineer.kokonutjava.proto.retrofit;
 
-import com.huni.engineer.kokonutjava.proto.JSFoodInfo;
 import com.huni.engineer.kokonutjava.proto.JSLoginInfo;
 import com.huni.engineer.kokonutjava.proto.response.JSresponseAnalyze;
 import com.huni.engineer.kokonutjava.proto.response.JSresponseLoginInfo;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;

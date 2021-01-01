@@ -21,6 +21,8 @@ public class DailyFoodInfo {
     protected String date;
     //아침 점심 저녁 -> 아침 1, 점심 2, 저녁 3, ...
     protected int consumeTime;
+    //path 추가
+    protected String path;
 
     public DailyFoodInfo(){}
 
@@ -112,6 +114,14 @@ public class DailyFoodInfo {
         this.consumeTime = consumeTime;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public String toString() {
         return "DailyFoodInfo{" +
@@ -123,6 +133,7 @@ public class DailyFoodInfo {
                 ", imageKey='" + imageKey + '\'' +
                 ", date='" + date + '\'' +
                 ", consumeTime=" + consumeTime +
+                ", path=" + path +
                 '}';
     }
 }
