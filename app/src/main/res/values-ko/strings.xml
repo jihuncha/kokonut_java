@@ -40,4 +40,8 @@
     <string name="camera_popup_capture">사진 촬영</string>
     <string name="camera_popup_select">사진 선택</string>
 
+    <string name="camera_main_kcal">kcal</string>
+    <string name="camera_main_g">g</string>
+
+    <string name="analyze_error">분석 결과 오류입니다. 다른 이미지를 사용해주세요.</string>
 </resources>

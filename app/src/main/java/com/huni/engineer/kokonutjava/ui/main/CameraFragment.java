@@ -3,9 +3,8 @@ package com.huni.engineer.kokonutjava.ui.main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +13,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -31,12 +30,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.huni.engineer.kokonutjava.KokonutDefine;
@@ -47,6 +48,7 @@ import com.huni.engineer.kokonutjava.common.PermissionHandler;
 import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
 import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
+import com.huni.engineer.kokonutjava.utils.DisplayUtil;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -54,12 +56,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
-
-import javax.security.auth.login.LoginException;
 
 
-public class CameraFragment extends BaseTabFragment implements View.OnClickListener{
+public class CameraFragment extends BaseTabFragment implements View.OnClickListener {
     public final String TAG = CameraFragment.class.getSimpleName();
 
     public CameraFragment(Activity activity, LayoutInflater inflater) {
@@ -90,7 +89,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     private CollapsingToolbarLayout ctl_container;
     private Toolbar toolbar;
 
-    private LinearLayout ll_toolbar_area;
+    private Toolbar tb_toolbar_area;
 
     private TextView tv_camera_title;
     private TextView tv_camera_date_title;
@@ -132,7 +131,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         myDateList = new ArrayList<>();
 
-        mCameraPermission   = new PermissionHandler(mActivity, PermissionHandler.REQ_CAMERA, false);
+        mCameraPermission = new PermissionHandler(mActivity, PermissionHandler.REQ_CAMERA, false);
 
         myDataAll = new ArrayList<>();
         myDataAll = DatabaseManager.getInstance(mContext).getMyFoodInfoAll();
@@ -141,10 +140,10 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         appbar = (AppBarLayout) root.findViewById(R.id.appbar);
 
-        toolbar = (Toolbar) root.findViewById(R.id.toolbar);
+//        toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
-        ll_toolbar_area = (LinearLayout) root.findViewById(R.id.ll_toolbar_area);
-        ll_toolbar_area.setOnClickListener(this);
+        tb_toolbar_area = (Toolbar) root.findViewById(R.id.tb_toolbar_area);
+        tb_toolbar_area.setOnClickListener(this);
 
         tv_camera_title = (TextView) root.findViewById(R.id.tv_camera_title);
         tv_camera_title.setOnClickListener(this);
@@ -159,7 +158,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         mPieChart = (PieChart) root.findViewById(R.id.piechart);
 
         //초기화
-        ll_toolbar_area.setVisibility(View.GONE);
+        tb_toolbar_area.setVisibility(View.GONE);
         tv_camera_title_toolbar.setVisibility(View.GONE);
         tv_camera_date_toolbar.setVisibility(View.GONE);
 
@@ -173,12 +172,12 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 if (state == State.EXPANDED) {
                     Log.d(TAG, "EXPANDED");
-                    ll_toolbar_area.setVisibility(View.GONE);
+                    tb_toolbar_area.setVisibility(View.GONE);
                     tv_camera_title_toolbar.setVisibility(View.GONE);
                     tv_camera_date_toolbar.setVisibility(View.GONE);
-                } else if (state == State.COLLAPSED){
+                } else if (state == State.COLLAPSED) {
                     Log.d(TAG, "COLLAPSED");
-                    ll_toolbar_area.setVisibility(View.VISIBLE);
+                    tb_toolbar_area.setVisibility(View.VISIBLE);
                     tv_camera_title_toolbar.setVisibility(View.VISIBLE);
                     tv_camera_date_toolbar.setVisibility(View.VISIBLE);
                 }
@@ -193,6 +192,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //hash 로 아이템 생성.
     HashMap<String, List<DailyFoodInfo>> myHashMap = new HashMap<>();
+
     private void initObserve() {
         Log.d(TAG, "initObserve");
 
@@ -201,6 +201,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             public void onChanged(List<DailyFoodInfo> dailyFoodInfos) {
                 Log.d(TAG, "myCurrentData/onChanged : " + dailyFoodInfos);
 
+                //해쉬맵 생성
                 for (DailyFoodInfo input : dailyFoodInfos) {
                     if (myHashMap.get(input.getDate()) != null) {
                         myHashMap.get(input.getDate()).add(input);
@@ -212,43 +213,9 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 Log.d(TAG, "check : " + myHashMap.toString());
 
-                initPagerTest(myHashMap);
+                initPagerReal(myHashMap);
 
-//                RecyclerView test1 = new RecyclerView(mContext);
-//                RecyclerView test2 = new RecyclerView(mContext);
-//                RecyclerView test3 = new RecyclerView(mContext);
-//                RecyclerView test4 = new RecyclerView(mContext);
-//                RecyclerView test5 = new RecyclerView(mContext);
-//                RecyclerView test6 = new RecyclerView(mContext);
-//                RecyclerView test7 = new RecyclerView(mContext);
-//
-//                Vector<View> pages = new Vector<View>();
-//
-//                pages.add(test1);
-//                pages.add(test2);
-//                pages.add(test3);
-//                pages.add(test4);
-//                pages.add(test5);
-//                pages.add(test6);
-//                pages.add(test7);
-//
-//                test1.setAdapter(new DetailAdapter());
 
-                //TODO 결국 날짜별로 정렬해줘야하나??
-//                mViewModel.makeHash(dailyFoodInfos);
-
-//                if (itemAdapter == null) {
-//                    itemAdapter = new ItemAdapter(dailyFoodInfos);
-//                    vp_bottom_container.setAdapter(itemAdapter);
-//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
-//                } else {
-//                    itemAdapter.setData(dailyFoodInfos);
-//                    itemAdapter.notifyDataSetChanged();
-//                    if (vp_bottom_container != null) {
-//                        vp_bottom_container.unregisterOnPageChangeCallback(mPageChange);
-//                    }
-//                    vp_bottom_container.registerOnPageChangeCallback(mPageChange);
-//                }
             }
         });
 
@@ -321,26 +288,26 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         KokonutSettings.getInstance(mContext).setTodayCal(calendarToday);
 
         tv_camera_date_toolbar.setText(calendarToday);
-        tv_camera_date_title.setText(calendarToday.split(" / ")[0] + " / " + calendarToday.split(" / ")[1] );
+        tv_camera_date_title.setText(calendarToday.split(" / ")[0] + " / " + calendarToday.split(" / ")[1]);
 
         calendarDateOnlyDate = new ArrayList<>();
         calendarDateAll = new ArrayList<>();
 
         calendarDateAll.add(
                 df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
-                df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
+                        df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
 
-        calendarDateOnlyDate.add(  df.format(currentCalendar.get(Calendar.YEAR)) + "-"
+        calendarDateOnlyDate.add(df.format(currentCalendar.get(Calendar.YEAR)) + "-"
                 + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
                 df.format(currentCalendar.get(Calendar.DATE)));
 
         for (int i = 1; i < 7; i++) {
-            currentCalendar.add(currentCalendar.DATE , 1);
+            currentCalendar.add(currentCalendar.DATE, 1);
             calendarDateAll.add(
                     df.format(currentCalendar.get(Calendar.YEAR)) + "/" + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "/" +
-                    df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
+                            df.format(currentCalendar.get(Calendar.DATE)) + "/" + returnDayOfWeek(currentCalendar.get(Calendar.DAY_OF_WEEK)));
 
-            calendarDateOnlyDate.add(  df.format(currentCalendar.get(Calendar.YEAR)) + "-"
+            calendarDateOnlyDate.add(df.format(currentCalendar.get(Calendar.YEAR)) + "-"
                     + df.format(currentCalendar.get(Calendar.MONTH) + 1) + "-" +
                     df.format(currentCalendar.get(Calendar.DATE)));
 
@@ -386,15 +353,19 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         }
     }
 
-    private void initPagerTest(HashMap <String, List<DailyFoodInfo>> input) {
-        List<List<DailyFoodInfo>> myList = new ArrayList<>();
+    //내 전체 리스트에 삽입
+    List<List<DailyFoodInfo>> myList;
+    private void initPagerReal(HashMap<String, List<DailyFoodInfo>> input) {
+        Log.d(TAG, "initPagerReal - " + input.toString());
+        //List 로 변환한다.
+        myList = new ArrayList<>();
 
         for (int i = 0; i < calendarDateOnlyDate.size(); i++) {
-            String test = calendarDateOnlyDate.get(i);
-            Log.e(TAG, "test : " + test);
+            String allDate = calendarDateOnlyDate.get(i);
+            Log.e(TAG, "allDate : " + allDate);
             myList.add(new ArrayList<>());
-            if (input.containsKey(test)) {
-                myList.get(i).addAll(input.get(test));
+            if (input.containsKey(allDate)) {
+                myList.get(i).addAll(input.get(allDate));
             }
         }
 
@@ -466,8 +437,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ll_toolbar_area:
-                Log.d(TAG, "onClick - ll_toolbar_area");
+            case R.id.tb_toolbar_area:
+                Log.d(TAG, "onClick - tb_toolbar_area");
                 if (appbar != null) {
                     appbar.setExpanded(true);
                 }
@@ -510,7 +481,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     //상단 날짜 recyclerview
     public class DateAdapter extends RecyclerView.Adapter<DateAdapter.ItemViewHolder> {
         private List<String> allData;
-        
+
         //checkPosition 관리
         private int checkedPosition = 0;
 
@@ -541,7 +512,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 holder.tv_day_of_week.setText(textItem.split("/")[3]);
                 holder.tv_day.setText(textItem.split("/")[2]);
 
-                if (checkedPosition == position){
+                if (checkedPosition == position) {
                     Log.d(TAG, "checkedPosition - : " + textItem);
 
                     holder.cl_parent_view.setBackground(mContext.getResources().getDrawable(R.drawable.circular_calendar_background));
@@ -593,7 +564,7 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
     //하단 viewPager -> viewPager
     public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
-//        public List<DailyFoodInfo> myList;
+        //        public List<DailyFoodInfo> myList;
         public List<List<DailyFoodInfo>> myInputList;
 
 
@@ -605,7 +576,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         public DetailAdapter mAdapterSix;
         public DetailAdapter mAdapterSeven;
 
-        public ItemAdapter(){}
+        public ItemAdapter() {
+        }
 
 //        public ItemAdapter(List<DailyFoodInfo> myList) {
 //            this.myList = myList;
@@ -669,31 +641,31 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
                 holder.rv_nutrient_container.setLayoutManager(layoutManager);
                 switch (position) {
-                    case 0 :
+                    case 0:
                         holder.rv_nutrient_container.setAdapter(mAdapterFirst);
                         break;
 
-                    case 1 :
+                    case 1:
                         holder.rv_nutrient_container.setAdapter(mAdapterSecond);
                         break;
 
-                    case 2 :
+                    case 2:
                         holder.rv_nutrient_container.setAdapter(mAdapterThird);
                         break;
 
-                    case 3 :
+                    case 3:
                         holder.rv_nutrient_container.setAdapter(mAdapterFourth);
                         break;
 
-                    case 4 :
+                    case 4:
                         holder.rv_nutrient_container.setAdapter(mAdapterFifth);
                         break;
 
-                    case 5 :
+                    case 5:
                         holder.rv_nutrient_container.setAdapter(mAdapterSix);
                         break;
 
-                    case 6 :
+                    case 6:
                         holder.rv_nutrient_container.setAdapter(mAdapterSeven);
                         break;
                 }
@@ -732,7 +704,8 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
     public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public List<DailyFoodInfo> myData;
 
-        public DetailAdapter(){}
+        public DetailAdapter() {
+        }
 
         public DetailAdapter(List<DailyFoodInfo> inputList) {
             this.myData = inputList;
@@ -755,26 +728,57 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                 final DetailItemViewHolder viewHolder = (DetailItemViewHolder) holder;
 
                 switch (position) {
-                    case 0 :
+                    case 0:
                         viewHolder.tv_set_time.setText(mContext.getResources().getString(R.string.tv_set_time_morning));
 
                         if (myData != null) {
-                            for (DailyFoodInfo test : myData) {
-                                if (test.getConsumeTime() == 0) {
-                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
-                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
-                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
-                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+                            for (DailyFoodInfo input : myData) {
+                                if (input.getConsumeTime() == 0) {
+                                    viewHolder.tv_title_calorie.setText("" + input.getCalories() +
+                                            mContext.getResources().getString(R.string.camera_main_kcal));
 
-                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
-                                    File imgFile = new File(test.getPath());
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + input.getCarbohydrate() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + input.getProtein() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + input.getFat() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
 
-                                    if(imgFile.exists()){
+                                    File imgFile = new File(input.getPath());
+                                    if (imgFile != null) {
+                                        viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.iv_plus_button.setVisibility(View.GONE);
 
-                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                        Glide.with(mContext)
+                                                .load(imgFile) // Uri of the picture
+                                                .centerCrop()
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .skipMemoryCache(false)
+                                                //.transition(new DrawableTransitionOptions().crossFade());
+                                                .transition(DrawableTransitionOptions.withCrossFade())
+                                                .apply(RequestOptions.bitmapTransform(new RoundedCorners(DisplayUtil.convertDipToPixel(mContext, 20))))
+//                                                .into(new CustomTarget<Drawable>() {
+//                                                    @Override
+//                                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                                                        viewHolder.rl_bottom_container.setBackground(resource);
+//                                                        viewHolder.rl_bottom_container.buildDrawingCache();
+//                                                    }
+//
+//                                                    @Override
+//                                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                                                    }
+//                                                });
+                                                .into(viewHolder.iv_food_data);
+                                    } else {
+                                        viewHolder.iv_food_data.setVisibility(View.GONE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_plus_button.setVisibility(View.VISIBLE);
                                     }
+                                    return;
                                 }
                             }
                         }
@@ -786,20 +790,52 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         if (myData != null) {
                             for (DailyFoodInfo test : myData) {
                                 if (test.getConsumeTime() == 1) {
-                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
-                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
-                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
-                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+                                    viewHolder.tv_title_calorie.setText("" + test.getCalories() +
+                                            mContext.getResources().getString(R.string.camera_main_kcal));
 
-                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+
                                     File imgFile = new File(test.getPath());
+                                    if (imgFile != null) {
+                                        viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.iv_plus_button.setVisibility(View.GONE);
 
-                                    if(imgFile.exists()){
-
-                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                        Glide.with(mContext)
+                                                .load(imgFile) // Uri of the picture
+                                                .centerCrop()
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .skipMemoryCache(false)
+                                                //.transition(new DrawableTransitionOptions().crossFade());
+                                                .transition(DrawableTransitionOptions.withCrossFade())
+                                                .apply(RequestOptions.bitmapTransform(new RoundedCorners(DisplayUtil.convertDipToPixel(mContext, 20))))
+//                                                .into(new CustomTarget<Drawable>() {
+//                                                    @Override
+//                                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                                                        viewHolder.rl_bottom_container.setBackground(resource);
+//                                                        viewHolder.rl_bottom_container.buildDrawingCache();
+//                                                    }
+//
+//                                                    @Override
+//                                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                                                    }
+//                                                });
+                                                .into(viewHolder.iv_food_data);
+                                    } else {
+                                        viewHolder.iv_food_data.setVisibility(View.GONE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_plus_button.setVisibility(View.VISIBLE);
                                     }
+
+                                    return;
                                 }
                             }
                         }
@@ -810,20 +846,52 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         if (myData != null) {
                             for (DailyFoodInfo test : myData) {
                                 if (test.getConsumeTime() == 2) {
-                                    viewHolder.tv_title_calorie.setText("" + test.getCalories());
-                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate());
-                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein());
-                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat());
+                                    viewHolder.tv_title_calorie.setText("" + test.getCalories() +
+                                            mContext.getResources().getString(R.string.camera_main_kcal));
 
-                                    viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                    viewHolder.tv_nutrient_item_first_detail.setText("" + test.getCarbohydrate() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_second_detail.setText("" + test.getProtein() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+                                    viewHolder.tv_nutrient_item_third_detail.setText("" + test.getFat() +
+                                            mContext.getResources().getString(R.string.camera_main_g));
+
                                     File imgFile = new File(test.getPath());
+                                    if (imgFile != null) {
+                                        viewHolder.iv_food_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.GONE);
+                                        viewHolder.iv_plus_button.setVisibility(View.GONE);
 
-                                    if(imgFile.exists()){
-
-                                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                                        viewHolder.iv_food_data.setImageBitmap(myBitmap);
+                                        Glide.with(mContext)
+                                                .load(imgFile) // Uri of the picture
+                                                .centerCrop()
+                                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                                .skipMemoryCache(false)
+                                                //.transition(new DrawableTransitionOptions().crossFade());
+                                                .transition(DrawableTransitionOptions.withCrossFade())
+                                                .apply(RequestOptions.bitmapTransform(new RoundedCorners(DisplayUtil.convertDipToPixel(mContext, 20))))
+//                                                .into(new CustomTarget<Drawable>() {
+//                                                    @Override
+//                                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+//                                                        viewHolder.rl_bottom_container.setBackground(resource);
+//                                                        viewHolder.rl_bottom_container.buildDrawingCache();
+//                                                    }
+//
+//                                                    @Override
+//                                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+//
+//                                                    }
+//                                                });
+                                                .into(viewHolder.iv_food_data);
+                                    } else {
+                                        viewHolder.iv_food_data.setVisibility(View.GONE);
+                                        viewHolder.iv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.tv_no_diet_data.setVisibility(View.VISIBLE);
+                                        viewHolder.iv_plus_button.setVisibility(View.VISIBLE);
                                     }
+
+                                    return;
                                 }
                             }
                         }
@@ -843,10 +911,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                                 "initiatePopupWindow/tv_profile_take_pic")) {
 
                             showCameraPopup();
-
-//                            Intent intent = new Intent();
-//                            intent.setClass(mActivity, CameraCaptureActivity.class);
-//                            mActivity.startActivityForResult(intent, 1234);
                         }
                     }
                 });
@@ -893,6 +957,19 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
 
         }
     }
+
+    public int exifOrientationToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
+        return 0;
+    }
+
+
 
     public void showCameraPopup() {
         //다이얼로그 생성
