@@ -1,6 +1,7 @@
 package com.huni.engineer.kokonutjava.proto.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 
 public class JSresponseAnalyze {
     public JSresponseAnalyze() {}
@@ -25,6 +26,38 @@ public class JSresponseAnalyze {
 
     @SerializedName("imageKey")
     protected String imageKey;
+
+    protected String date;
+    protected int consumeTime;
+
+    public void set(DailyFoodInfo input) {
+        this.name = input.getFoodName();
+        this.calories = input.getCalories();
+        this.carbohydrate = input.getCarbohydrate();
+        this.protein = input.getProtein();
+        this.fat = input.getFat();
+        this.imageKey = input.getImageKey();
+        this.date = input.getDate();
+        this.consumeTime = input.getConsumeTime();
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getConsumeTime() {
+        return consumeTime;
+    }
+
+    public void setConsumeTime(int consumeTime) {
+        this.consumeTime = consumeTime;
+    }
+
+
 
     public String getName() {
         return name;

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.huni.engineer.kokonutjava.R;
+import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
 import com.huni.engineer.kokonutjava.proto.JSUtil;
 import com.huni.engineer.kokonutjava.proto.response.JSresponseAnalyze;
 import com.huni.engineer.kokonutjava.ui.popup.BottomDialog;
@@ -24,6 +25,8 @@ import com.huni.engineer.kokonutjava.utils.GlideUtil;
 
 public class CameraResultActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = CameraResultActivity.class.getSimpleName();
+
+    public static final String EDIT_OR_NOT = "EDIT_OR_NOT";
 
     private Context mContext;
     private Handler mHandler;
@@ -35,8 +38,12 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
     private String mPath = null;
     private JSresponseAnalyze myData;
 
+    private DailyFoodInfo myDataFoodInfo;
+
     //하단 dialog
     private BottomDialog mBottomDialog;
+
+    private boolean editOrNot = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +60,12 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
             return;
         }
 
-        myData = JSUtil.json2Object(intent.getStringExtra("info"), JSresponseAnalyze.class);
+        if (intent.getStringExtra("info") != null) {
+            myData = JSUtil.json2Object(intent.getStringExtra("info"), JSresponseAnalyze.class);
+        }
+
         mPath = intent.getStringExtra(CameraPreviewActivity.EXTRA_PATH);
+        editOrNot = intent.getBooleanExtra(EDIT_OR_NOT, false);
 
         if (TextUtils.isEmpty(mPath)) {
             Log.e(TAG, "onCreate(): mPath is NULL!!!");
@@ -62,7 +73,7 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
 
         Log.d(TAG, "myData: " + myData.toString());
 
-        mBottomDialog = new BottomDialog(mContext, myData, mPath);
+        mBottomDialog = new BottomDialog(mContext, myData, mPath, editOrNot);
         mBottomDialog.show(getSupportFragmentManager(), TAG);
         mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
             @Override
@@ -70,7 +81,6 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
-
 
         initComponent();
     }
@@ -100,7 +110,7 @@ public class CameraResultActivity extends AppCompatActivity implements View.OnCl
                 if (mBottomDialog != null) {
                     mBottomDialog.show(getSupportFragmentManager(), TAG);
                 } else {
-                    mBottomDialog = new BottomDialog(mContext, myData, mPath);
+                    mBottomDialog = new BottomDialog(mContext, myData, mPath, editOrNot);
                     mBottomDialog.show(getSupportFragmentManager(), TAG);
                     mBottomDialog.setListenerClose(new BottomDialog.OnCloseModal() {
                         @Override

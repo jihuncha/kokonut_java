@@ -53,6 +53,8 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
     //check 를 위해 public 설정
     public FoodListAdapter mAdapter;
 
+    private boolean editOrNot;
+
     public interface OnCloseModal {
         void onCloseModal();
     }
@@ -63,10 +65,11 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
 
     public BottomDialog(){ }
 
-    public BottomDialog(Context mContext, JSresponseAnalyze myItem, String mPath) {
+    public BottomDialog(Context mContext, JSresponseAnalyze myItem, String mPath, boolean editOrNot) {
         this.mContext = mContext;
         this.myItem = myItem;
         this.mPath = mPath;
+        this.editOrNot = editOrNot;
     }
 
 //    public void setListener(OnClickListener listener) {
@@ -109,6 +112,11 @@ public class BottomDialog extends BottomSheetDialogFragment implements View.OnCl
 
         bt_save_data = v.findViewById(R.id.bt_save_data);
         bt_save_data.setOnClickListener(this);
+        if (editOrNot) {
+            bt_save_data.setVisibility(View.GONE);
+        } else {
+            bt_save_data.setVisibility(View.VISIBLE);
+        }
 
         return v;
     }

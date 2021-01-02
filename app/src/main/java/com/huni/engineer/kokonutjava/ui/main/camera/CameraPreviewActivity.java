@@ -148,6 +148,7 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                                     intent.setClass(mContext, CameraResultActivity.class);
                                     intent.putExtra(EXTRA_PATH, mContentPath);
                                     intent.putExtra("info", JSUtil.json2String(result));
+                                    intent.putExtra(CameraResultActivity.EDIT_OR_NOT, false);
                                     startActivity(intent);
 
                                     break;

@@ -46,7 +46,11 @@ import com.huni.engineer.kokonutjava.R;
 import com.huni.engineer.kokonutjava.common.DatabaseManager;
 import com.huni.engineer.kokonutjava.common.PermissionHandler;
 import com.huni.engineer.kokonutjava.common.data.DailyFoodInfo;
+import com.huni.engineer.kokonutjava.proto.JSUtil;
+import com.huni.engineer.kokonutjava.proto.response.JSresponseAnalyze;
 import com.huni.engineer.kokonutjava.ui.main.camera.CameraCaptureActivity;
+import com.huni.engineer.kokonutjava.ui.main.camera.CameraPreviewActivity;
+import com.huni.engineer.kokonutjava.ui.main.camera.CameraResultActivity;
 import com.huni.engineer.kokonutjava.utils.AppBarStateChangeListener;
 import com.huni.engineer.kokonutjava.utils.DisplayUtil;
 
@@ -598,33 +602,35 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewpager_inside_sample, parent, false);
             vh = new ItemViewHolder(v);
 
-            for (int i = 0; i < myInputList.size(); i++) {
-                switch (i) {
-                    case 0:
-                        mAdapterFirst = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 1:
-                        mAdapterSecond = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 2:
-                        mAdapterThird = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 3:
-                        mAdapterFourth = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 4:
-                        mAdapterFifth = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 5:
-                        mAdapterSix = new DetailAdapter(myInputList.get(i));
-                        break;
-                    case 6:
-                        mAdapterSeven = new DetailAdapter(myInputList.get(i));
-                        break;
+            if (myInputList != null) {
+                for (int i = 0; i < myInputList.size(); i++) {
+                    switch (i) {
+                        case 0:
+                            mAdapterFirst = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 1:
+                            mAdapterSecond = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 2:
+                            mAdapterThird = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 3:
+                            mAdapterFourth = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 4:
+                            mAdapterFifth = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 5:
+                            mAdapterSix = new DetailAdapter(myInputList.get(i));
+                            break;
+                        case 6:
+                            mAdapterSeven = new DetailAdapter(myInputList.get(i));
+                            break;
 
-                    default:
-                        Log.e(TAG, "error! - " + i);
-                        break;
+                        default:
+                            Log.e(TAG, "error! - " + i);
+                            break;
+                    }
                 }
             }
             return vh;
@@ -726,6 +732,41 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof DetailItemViewHolder) {
                 final DetailItemViewHolder viewHolder = (DetailItemViewHolder) holder;
+
+                viewHolder.iv_plus_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "iv_plus_button/onClick");
+
+                        KokonutSettings.getInstance(mContext).setCurrentClickPos(position);
+
+                        Log.d(TAG, "pos check - " + KokonutSettings.getInstance(mContext).getCurrentClickPos());
+
+                        if (mCameraPermission.checkPermissions(true,
+                                "initiatePopupWindow/tv_profile_take_pic")) {
+
+                            showCameraPopup();
+                        }
+                    }
+                });
+
+                viewHolder.iv_food_data.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d(TAG, "iv_food_data/onClick");
+
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, CameraResultActivity.class);
+                        intent.putExtra(CameraPreviewActivity.EXTRA_PATH, myData.get(position).getPath());
+                        intent.putExtra(CameraResultActivity.EDIT_OR_NOT, true);
+
+                        JSresponseAnalyze tempData = new JSresponseAnalyze();
+                        tempData.set(myData.get(position));
+
+                        intent.putExtra("info", JSUtil.json2String(tempData));
+                        mActivity.startActivity(intent);
+                    }
+                });
 
                 switch (position) {
                     case 0:
@@ -897,25 +938,6 @@ public class CameraFragment extends BaseTabFragment implements View.OnClickListe
                         }
                         break;
                 }
-
-                viewHolder.iv_plus_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.d(TAG, "iv_plus_button/onClick");
-
-                        KokonutSettings.getInstance(mContext).setCurrentClickPos(position);
-
-                        Log.d(TAG, "pos check - " + KokonutSettings.getInstance(mContext).getCurrentClickPos());
-
-                        if (mCameraPermission.checkPermissions(true,
-                                "initiatePopupWindow/tv_profile_take_pic")) {
-
-                            showCameraPopup();
-                        }
-                    }
-                });
-
-
             }
         }
 

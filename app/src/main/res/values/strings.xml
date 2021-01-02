@@ -43,4 +43,6 @@
     <string name="camera_main_g">g</string>
 
     <string name="analyze_error">분석 결과 오류입니다. 다른 이미지를 사용해주세요.</string>
+
+    <string name="camera_result_detail">상세 보기</string>
 </resources>

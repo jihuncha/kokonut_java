@@ -32,7 +32,7 @@
         android:id="@+id/bt_open_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OPEN DIALOG"
+        android:text="@string/camera_result_detail"
         android:background="@color/color_00813d"
         app:layout_constraintTop_toBottomOf="@+id/iv_food_info"
         app:layout_constraintBottom_toBottomOf="parent"
