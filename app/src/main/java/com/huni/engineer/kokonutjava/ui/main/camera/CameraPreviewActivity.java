@@ -185,7 +185,8 @@ public class CameraPreviewActivity extends AppCompatActivity implements View.OnC
                     public void onFailure(Call<JSresponseAnalyze> call, Throwable t) {
                         Log.d(TAG, "onFailure/reason : " + t.getMessage());
 
-                        Toast.makeText(mContext, "사진을 검색할 수 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "사진을 검색할 수 없습니다. 다시 시도해 주세요. - " + t.getMessage()
+                                , Toast.LENGTH_SHORT).show();
 
                         LoadingActivity.hide(mContext, "onFailure");
                     }

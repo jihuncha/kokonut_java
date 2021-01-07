@@ -92,7 +92,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             public void onFailure(Call<JSresponseLoginInfo> call, Throwable t) {
                 Log.e(TAG, "onFailure - " + t.toString());
 
-                Toast.makeText(mContext,"Login Info Not Correct!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Login Info Not Correct!! - " + t.getMessage(), Toast.LENGTH_SHORT).show();
 
                 startKokonutApp();
             }
