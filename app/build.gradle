@@ -18,8 +18,8 @@ def nor_min_sdk_version = 21
 //def nor_min_sdk_version = 19
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         /////////////////////
@@ -28,7 +28,7 @@ android {
 
         applicationId "com.huni.engineer.kokonut_java"
         minSdkVersion nor_min_sdk_version
-        targetSdkVersion 29
+        targetSdkVersion 30
         multiDexEnabled false
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
